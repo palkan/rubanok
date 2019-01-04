@@ -1,5 +1,20 @@
 sudo: false
 language: ruby
 rvm:
-  - 2.5.1
   - 2.6.0
+
+notifications:
+  email: false
+
+matrix:
+  fast_finish: true
+  include:
+    - rvm: ruby-head
+      gemfile: gemfiles/railsmaster.gemfile
+    - rvm: 2.6.0
+      gemfile: gemfiles/rails52.gemfile
+    - rvm: 2.5.1
+      gemfile: gemfiles/rails42.gemfile
+  allow_failures:
+    - rvm: ruby-head
+      gemfile: gemfiles/railsmaster.gemfile

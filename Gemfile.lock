@@ -120,8 +120,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  actionpack (>= 4.2)
-  actionview (>= 4.2)
+  actionpack (~> 5.2)
+  actionview (~> 5.2)
   bundler (~> 1.16)
   pry-byebug
   rake (~> 10.0)

@@ -3,15 +3,33 @@
 require_relative "./controller_helper"
 
 class RejectPlane < Rubanok::Plane
-  map :type do |type|
-    data.reject { |item| item[:type] == type }
+  map :type do |type:|
+    raw.reject { |item| item[:type] == type }
   end
 end
 
 class PostPlane < Rubanok::Plane
-  map :type do |type|
-    data.select { |item| item[:type] == type }
+  map :type do |type:|
+    raw.select { |item| item[:type] == type }
   end
+end
+
+if ActionPack.version.release < Gem::Version.new("5")
+  using(Module.new do
+    refine Hash do
+      def to_params
+        self
+      end
+    end
+  end)
+else
+  using(Module.new do
+    refine Hash do
+      def to_params
+        {params: self}
+      end
+    end
+  end)
 end
 
 class PostsController < ActionController::Base
@@ -36,35 +54,42 @@ class PostsController < ActionController::Base
   def explicit
     data = planish(
       FAKE_DATA,
-      params,
+      params.require(:filter),
       with: ::RejectPlane
     )
-    render text: data.to_json
+    render json: data
   end
 
   def implicit
     data = planish(FAKE_DATA)
-    render text: data.to_json
+    render json: data
   end
 end
 
-describe "Rails controller integration" do
-  include RSpec::Rails::RailsExampleGroup
-  include ActionController::TestCase::Behavior
+describe PostsController do
+  include RSpec::Rails::ControllerExampleGroup
 
-  before { @routes = SharedTestRoutes }
-
-  tests PostsController
+  routes { SharedTestRoutes }
 
   describe "#planish" do
     let(:data) { JSON.parse(response.body) }
 
-    specify "implicit plane" do
-      get :implicit, params: {type: "sports"}
+    # ?? Rails 4.2 failes with ThreadError: already initialized
+    before do
+      @response.define_singleton_method(:recycle!) { }
+    end
 
-      epxect(data.size).to eq 2
+    specify "implicit plane" do
+      get :implicit, {type: "sports"}.to_params
+
+      expect(data.size).to eq 2
+    end
+
+    specify "explicit plane" do
+      get :explicit, {filter: {type: "sports"}}.to_params
+
+      expect(data.size).to eq 1
+      expect(data.first["id"]).to eq 25
     end
   end
-
-  describe "#have_planished"
 end

@@ -21,7 +21,7 @@ describe "Plane.match" do
       },
       {
         name: "Greg",
-        age: "53",
+        age: "54",
         occupation: "bas"
       },
       {
@@ -53,7 +53,7 @@ describe "Plane.match" do
     end
 
     specify "no matching params" do
-      expect(subject).to eq data
+      expect(subject).to eq input
     end
 
     specify "with matching param and value" do
@@ -92,113 +92,110 @@ describe "Plane.match" do
         expect(subject).to eq []
       end
     end
+  end
 
-    context "multiple fields" do
-      let(:plane) do
-        Class.new(Rubanok::Plane) do
-          SORT_FIELDS = %w[age].freeze
+  context "multiple fields" do
+    let(:plane) do
+      Class.new(Rubanok::Plane) do
+        match :sort_by, :sort, activate_on: :sort_by do
+          having "status", "asc" do
+            raw.sort do |a, b|
+              next 0 if a[:status] == b[:status]
 
-          match :sort_by, :sort, active_on: :sort_by do
-            having "status", "asc" do
-              raw.sort do |a, b|
-                next 0 if a[:status] == b[:status]
-
-                a[:status].nil? && a[:status] == "active" ? 1 : -1
-              end
-            end
-
-            having "status", "desc" do
-              raw.sort do |a, b|
-                next 0 if a[:status] == b[:status]
-                next 1 if a[:status].nil?
-
-                a[:status] == "active" ? -1 : 1
-              end
-            end
-
-            having "name" do |sort: "asc"|
-              sign = sort_by == "asc" ? -1 : 1
-
-              raw.sort do |a, b|
-                sign * (
-                  a[:name] == "Dexter" ? 1 : a[:name] <=> b[:name]
-                )
-              end
-            end
-
-            default do |sort_by:, sort: "asc"|
-              return [] unless valid_sort_field?(sort)
-
-              sign = sort_by == "asc" ? -1 : 1
-
-              sort = sort.to_sym
-
-              raw.sort { |a, b| sign * (a[sort] <=> b[sort]) }
+              a[:status].nil? || a[:status] == "active" ? -1 : 1
             end
           end
 
-          def valid_sort_field?(field)
-            SORT_FIELDS.include?(field)
+          having "status", "desc" do
+            raw.sort do |a, b|
+              next 0 if a[:status] == b[:status]
+              next -1 if a[:status].nil?
+              next 1 if b[:status].nil?
+
+              a[:status] == "past" ? -1 : 1
+            end
+          end
+
+          having "name" do |sort: "asc"|
+            sign = sort == "asc" ? 1 : -1
+
+            raw.sort do |a, b|
+              a[:name] == "Dexter" ? -1 : sign * (a[:name] <=> b[:name])
+            end
+          end
+
+          default do |sort_by:, sort: "asc"|
+            return [] unless valid_sort_field?(sort_by)
+
+            sign = sort == "asc" ? 1 : -1
+
+            sort_by = sort_by.to_sym
+
+            raw.sort { |a, b| sign * (a[sort_by] <=> b[sort_by]) }
           end
         end
+
+        def valid_sort_field?(field)
+          %w[age].include?(field)
+        end
       end
+    end
 
-      let(:names) { subject.map { |item| item[:name] } }
+    let(:names) { subject.map { |item| item[:name] } }
 
-      specify "no matches" do
-        expect(subject).to eq([])
-      end
+    specify "no matches" do
+      expect(subject).to eq(input)
+    end
 
-      specify "with both params match" do
-        params[:sort_by] = "status"
-        params[:sort] = "asc"
+    specify "with both params match" do
+      params[:sort_by] = "status"
+      params[:sort] = "asc"
 
-        expect(names).to eq(
-          %w[Dexter Noodles Greg Pete Ron]
-        )
-      end
+      expect(names).to eq(
+        %w[Dexter Noodles Greg Pete Ron]
+      )
+    end
 
-      specify "when second clause match" do
-        params[:sort_by] = "status"
-        params[:sort] = "desc"
+    specify "when second clause match" do
+      params[:sort_by] = "status"
+      params[:sort] = "desc"
 
-        expect(names).to eq(
-          %w[Dexter Noodles Greg Ron Pete]
-        )
-      end
+      expect(names).to eq(
+        %w[Dexter Noodles Greg Ron Pete]
+      )
+    end
 
-      specify "when only one param present" do
-        params[:sort_by] = "name"
+    specify "when only one param present" do
+      params[:sort_by] = "name"
 
-        expect(names).to eq(
-          %w[Dexter Greg Noodles Pete Ron]
-        )
-      end
+      expect(names).to eq(
+        %w[Dexter Greg Noodles Pete Ron]
+      )
+    end
 
-      specify "when both params present for one param matching clause" do
-        params[:sort_by] = "name"
-        params[:sort] = "desc"
+    specify "when both params present for one param matching clause" do
+      params[:sort_by] = "name"
+      params[:sort] = "desc"
 
-        expect(names).to eq(
-          %w[Dexter Ron Pete Noodles Greg]
-        )
-      end
+      expect(names).to eq(
+        %w[Dexter Ron Pete Noodles Greg]
+      )
+    end
 
-      specify "when default clause match" do
-        params[:sort_by] = "age"
-        params[:sort] = "desc"
+    specify "when default clause match" do
+      params[:sort_by] = "age"
+      params[:sort] = "desc"
 
-        expect(names).to eq(
-          %w[Noodles Greg Dexter Ron Pete]
-        )
-      end
+      expect(names).to eq(
+        %w[Noodles Greg Dexter Ron Pete]
+      )
+    end
 
-      specify "calling instance method" do
-        params[:sort_by] = "salary"
-        params[:sort] = "desc"
+    specify "calling instance method" do
+      params[:sort_by] = "salary"
+      params[:sort] = "desc"
 
-        expect(names).to eq([])
-      end
+      expect(names).to eq([])
     end
   end
 end

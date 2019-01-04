@@ -1,0 +1,2 @@
+gem "actionpack", "~> 5.2"
+gem "actionview", "~> 5.2"

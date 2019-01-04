@@ -64,7 +64,7 @@ module Rubanok
       rules.each do |rule|
         next unless rule.applicable?(params)
 
-        self.input = send(rule.to_method_name, **rule.project(params))
+        apply_rule! rule.to_method_name, rule.project(params)
       end
 
       input
@@ -75,6 +75,15 @@ module Rubanok
     attr_accessor :input
 
     alias raw input
+
+    def apply_rule!(method_name, data)
+      self.input =
+        if data.empty?
+          send(method_name)
+        else
+          send(method_name, **data)
+        end
+    end
 
     def rules
       self.class.rules

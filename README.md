@@ -129,7 +129,23 @@ end
 
 **NOTE:** matching only match the exact values; more complex matching could be added in the future.
 
-### Empty params
+### Rule activation
+
+Rubanok _activates_ a rule by checking whether the corresponding keys are present in the params object. All the fields must be present to apply the rule.
+
+Sometimes you might want to make some fields optional (or event all of them). You can use `activate_on` and `activate_always` options for that:
+
+```ruby
+# Always apply the rule; use default values for keyword args
+map :page, :per_page, activate_always: true do |page: 1, per_page: 2|
+  raw.page(page).per(per_page)
+end
+
+# Only require `sort_by` to be preset to activate sorting rule
+match :sort_by, :sort, activate_on: :sort_by do
+ # ...
+end
+```
 
 By default, Rubanok ignores empty param values (using `#empty?` under the hood) and do not activate the matching rules (i.e. `{ q: "" }` or `{ q: nil }` won't activate the `map :q` rule).
 

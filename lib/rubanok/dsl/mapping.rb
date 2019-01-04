@@ -12,8 +12,10 @@ module Rubanok
       class Rule < Rubanok::Rule
         METHOD_PREFIX = "__map"
 
+        private
+
         # prefix rule method name to avoid collisions
-        def to_method_name
+        def build_method_name
           "#{METHOD_PREFIX}#{super}"
         end
       end

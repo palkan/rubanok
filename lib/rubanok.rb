@@ -3,6 +3,8 @@
 require "rubanok/version"
 require "rubanok/plane"
 
+require "rubanok/railtie" if defined?(Rails)
+
 # Rubanok provides a DSL to build parameters-based data transformers.
 #
 # Example:

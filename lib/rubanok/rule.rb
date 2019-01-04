@@ -29,10 +29,14 @@ module Rubanok
     end
 
     def to_method_name
-      @method_name ||= "__#{fields.join("_")}__"
+      @method_name ||= build_method_name
     end
 
     private
+
+    def build_method_name
+      "__#{fields.join("_")}__"
+    end
 
     def fetch_value(params, field)
       return UNDEFINED if !params.key?(field) || empty?(params[field])

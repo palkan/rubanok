@@ -15,9 +15,72 @@ module Rubanok
     #   end
     module Matching
       class Rule < Rubanok::Rule
+        METHOD_PREFIX = "__match"
+
+        class Clause < Rubanok::Rule
+          attr_reader :values, :id, :block
+
+          def initialize(id, fields, values = [], **options, &block)
+            super(fields, options)
+            @id = id
+            @block = block
+            @values = Hash[fields.take(values.size).zip(values)].freeze
+            @fields = (fields - @values.keys).freeze
+          end
+
+          def applicable?(params)
+            values.all? { |key, matcher| params.key?(key) && (matcher == params[key]) }
+          end
+
+          alias to_method_name id
+        end
+
+        attr_reader :clauses
+
+        def initialize(*)
+          super
+          @clauses = []
+        end
+
+        def matching_clause(params)
+          clauses.detect do |clause|
+            clause.applicable?(params)
+          end
+        end
+
+        def having(*values, &block)
+          clauses << Clause.new("#{to_method_name}_#{clauses.size}", fields, values, &block)
+        end
+
+        def default(&block)
+          clauses << Clause.new("#{to_method_name}_default", fields, activate_always: true, &block)
+        end
+
+        private
+
+        # prefix rule method name to avoid collisions
+        def build_method_name
+          "#{METHOD_PREFIX}#{super}"
+        end
       end
 
-      def match(*fields)
+      def match(*fields, **options, &block)
+        rule = Rule.new(fields, options)
+
+        rule.instance_eval(&block)
+
+        define_method(rule.to_method_name) do |params|
+          clause = rule.matching_clause(params)
+          next raw unless clause
+
+          apply_rule! clause.to_method_name, clause.project(params)
+        end
+
+        rule.clauses.each do |clause|
+          define_method(clause.to_method_name, &clause.block)
+        end
+
+        rules << rule
       end
     end
   end
