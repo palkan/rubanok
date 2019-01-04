@@ -1,3 +1,5 @@
+[![Gem Version](https://badge.fury.io/rb/rubanok.svg)](https://rubygems.org/gems/rubanok) [![Build Status](https://travis-ci.org/palkan/rubanok.svg?branch=master)](https://travis-ci.org/palkan/rubanok)
+
 # Rubanok
 
 Rubanok provides a DSL to build parameters-based data transformers.
@@ -48,7 +50,7 @@ end
 ```
 
 Requirements:
-- Ruby ~> 2.4
+- Ruby ~> 2.5
 - Rails >= 4.2 (only for using with Rails)
 
 <a href="https://evilmartians.com/">
