@@ -129,6 +129,12 @@ end
 
 **NOTE:** matching only match the exact values; more complex matching could be added in the future.
 
+### Empty params
+
+By default, Rubanok ignores empty param values (using `#empty?` under the hood) and do not activate the matching rules (i.e. `{ q: "" }` or `{ q: nil }` won't activate the `map :q` rule).
+
+You can change this behaviour by setting: `Rubanok.ignore_empty_values = false`.
+
 ### Testing
 
 One of the benefits of having all the modification logic in its own class is the ability to test it in isolation:

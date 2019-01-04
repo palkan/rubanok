@@ -2,6 +2,11 @@
 
 require "bundler/setup"
 
+begin
+  require "pry-byebug"
+rescue LoadError
+end
+
 if ENV["CC_REPORT"]
   require "simplecov"
   SimpleCov.start do
@@ -10,11 +15,6 @@ if ENV["CC_REPORT"]
 end
 
 require "rubanok"
-
-begin
-  require "pry-byebug"
-rescue LoadError
-end
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
