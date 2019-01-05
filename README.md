@@ -71,7 +71,7 @@ class CourseSessionsPlane < Rubanok::Plane
   # You can map keys
   map :q do |q:|
     # `raw` is an accessor for input data
-    raw.searh(q)
+    raw.search(q)
   end
 end
 
