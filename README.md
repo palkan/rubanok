@@ -32,7 +32,7 @@ class CourseSessionController < ApplicationController
       # pass params
       params,
       # provide a plane to use
-      with: CourseSessionPlane
+      with: CourseSessionsPlane
     )
   end
 end
@@ -67,7 +67,7 @@ The core concept of this library is a _plane_ (or _hand plane_, or "рубано
 From the example above:
 
 ```ruby
-class CourseSessionPlane < Rubanok::Plane
+class CourseSessionsPlane < Rubanok::Plane
   # You can map keys
   map :q do |q:|
     # `raw` is an accessor for input data
@@ -76,7 +76,7 @@ class CourseSessionPlane < Rubanok::Plane
 end
 
 # The following code
-CourseSessionPlane.call(CourseSession.all, q: "xyz")
+CourseSessionsPlane.call(CourseSession.all, q: "xyz")
 
 # is equal to
 CourseSession.all.search("xyz")
@@ -85,7 +85,7 @@ CourseSession.all.search("xyz")
 You can map multiple keys at once:
 
 ```ruby
-class CourseSessionPlane < Rubanok::Plane
+class CourseSessionsPlane < Rubanok::Plane
   DEFAULT_PAGE_SIZE = 25
 
   map :page, :per_page do |page:, per_page: DEFAULT_PAGE_SIZE|
@@ -97,7 +97,7 @@ end
 There is also `match` method to handle values:
 
 ```ruby
-class CourseSessionPlane < Rubanok::Plane
+class CourseSessionsPlane < Rubanok::Plane
   SORT_ORDERS = %w(asc desc).freeze
   SORTABLE_FIELDS = %w(id name created_at).freeze
 
@@ -157,7 +157,7 @@ One of the benefits of having all the modification logic in its own class is the
 
 ```ruby
 # For example, with RSpec
-describe CourseSessionPlane do
+describe CourseSessionsPlane do
   let(:input ) { CourseSession.all }
   let(:params) { {} }
 
@@ -179,7 +179,7 @@ describe CourseSessionController do
 
   specify do
     expect { subject }.to have_planished(CourseSession.all).
-      with(CourseSessionPlane)
+      with(CourseSessionsPlane)
   end
 end
 ```

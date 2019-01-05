@@ -8,7 +8,7 @@ class RejectPlane < Rubanok::Plane
   end
 end
 
-class PostPlane < Rubanok::Plane
+class PostsPlane < Rubanok::Plane
   map :type do |type:|
     raw.select { |item| item[:type] == type }
   end

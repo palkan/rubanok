@@ -9,7 +9,9 @@ module Rubanok
     attr_reader :data_class, :plane, :matcher
 
     def initialize(data_class = nil)
-      @data_class = data_class
+      if data_class
+        @data_class = data_class.is_a?(Module) ? data_class : data_class.class
+      end
       @matcher = have_received(:call)
     end
 

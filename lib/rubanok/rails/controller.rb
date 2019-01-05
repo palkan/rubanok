@@ -30,9 +30,9 @@ module Rubanok
       with.call(data, plane_params)
     end
 
-    # Tries to infer the plane class from controller name
+    # Tries to infer the plane class from controller path
     def implicit_plane_class
-      "#{controller_name.classify.singularize}Plane".safe_constantize
+      "#{controller_path.classify.pluralize}Plane".safe_constantize
     end
   end
 end
