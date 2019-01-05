@@ -5,6 +5,10 @@ require "rubanok/plane"
 
 require "rubanok/railtie" if defined?(Rails)
 
+if defined?(RSpec) && (ENV["RACK_ENV"] == "test" || ENV["RAILS_ENV"] == "test")
+  require "rubanok/rspec"
+end
+
 # Rubanok provides a DSL to build parameters-based data transformers.
 #
 # Example:

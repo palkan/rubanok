@@ -171,7 +171,7 @@ describe CourseSessionPlane do
 end
 ```
 
-Now in your controller you only have to test that the specific _plan_ is applied:
+Now in your controller you only have to test that the specific _plane_ is applied:
 
 ```ruby
 describe CourseSessionController do
@@ -186,7 +186,7 @@ end
 
 **NOTE**: input matching only checks for the class equality.
 
-To use `have_planished` matcher you must add the following line to your `spec_helper.rb` / `rails_helper.rb`:
+To use `have_planished` matcher you must add the following line to your `spec_helper.rb` / `rails_helper.rb` (it's added automatically if RSpec defined and `RAILS_ENV`/`RACK_ENV` is equal to `"test"`):
 
 ```ruby
 require "rubanok/rspec"
