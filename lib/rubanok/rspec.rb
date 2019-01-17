@@ -29,7 +29,7 @@ module Rubanok
 
       raise ArgumentError, "Plane class is required. Please, specify it using `.with` modifier" if plane.nil?
 
-      allow(plane).to receive(:call)
+      allow(plane).to receive(:call).and_call_original
       proc.call
 
       matcher.with(an_instance_of(data_class), anything) if data_class
