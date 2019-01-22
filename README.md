@@ -58,7 +58,13 @@ Requirements:
 
 ## Installation
 
-**This gem hasn't been released (and even built) yet.**
+Add to your `Gemfile`:
+
+```ruby
+gem "rubanok"
+```
+
+And run `bundle install`.
 
 ## Usage
 
