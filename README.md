@@ -70,7 +70,7 @@ And run `bundle install`.
 
 ## Usage
 
-The core concept of this library is a _plane_ (or _hand plane_, or "рубанок" in Russian). Plane is responsible for mapping parameters to transformrations.
+The core concept of this library is a _plane_ (or _hand plane_, or "рубанок" in Russian). Plane is responsible for mapping parameters to transformations.
 
 From the example above:
 
@@ -135,13 +135,13 @@ class CourseSessionsPlane < Rubanok::Plane
 end
 ```
 
-**NOTE:** matching only match the exact values; more complex matching could be added in the future.
+**NOTE:** Rubanok only matches exact values; more complex matching could be added in the future.
 
 ### Rule activation
 
 Rubanok _activates_ a rule by checking whether the corresponding keys are present in the params object. All the fields must be present to apply the rule.
 
-Sometimes you might want to make some fields optional (or event all of them). You can use `activate_on` and `activate_always` options for that:
+Some fields may be optional, or perhaps even all of them. You can use `activate_on` and `activate_always` options to mark something as an optional key instead of a required one:
 
 ```ruby
 # Always apply the rule; use default values for keyword args
@@ -155,13 +155,13 @@ match :sort_by, :sort, activate_on: :sort_by do
 end
 ```
 
-By default, Rubanok ignores empty param values (using `#empty?` under the hood) and do not activate the matching rules (i.e. `{ q: "" }` or `{ q: nil }` won't activate the `map :q` rule).
+By default, Rubanok ignores empty param values (using `#empty?` under the hood) and will not run matching rules on those values. For example: `{ q: "" }` and `{ q: nil }` won't activate the `map :q` rule.
 
 You can change this behaviour by setting: `Rubanok.ignore_empty_values = false`.
 
 ### Testing
 
-One of the benefits of having all the modification logic in its own class is the ability to test it in isolation:
+One of the benefits of having modification logic contained in its own class is the ability to test modifications in isolation:
 
 ```ruby
 # For example, with RSpec
@@ -202,7 +202,7 @@ require "rubanok/rspec"
 
 ### Rails vs. non-Rails
 
-Rubanok is a Rails-free library but has some useful Rails extensions, such as `planish` helper for controllers (included automatically into `ActionController::Base` and `ActionController::API`).
+Rubanok does not require Rails, but it has some useful Rails extensions such as `planish` helper for controllers (included automatically into `ActionController::Base` and `ActionController::API`).
 
 If you use `ActionController::Metal` you must include the `Rubanok::Controller` module yourself.
 
