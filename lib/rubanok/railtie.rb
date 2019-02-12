@@ -8,6 +8,12 @@ module Rubanok # :nodoc:
 
         ActionController::Base.include Rubanok::Controller
       end
+
+      ActiveSupport.on_load(:action_controller_api) do
+        require "rubanok/rails/controller"
+
+        ActionController::API.include Rubanok::Controller
+      end
     end
   end
 end
