@@ -4,7 +4,7 @@
 
 Rubanok provides a DSL to build parameters-based data transformers.
 
-📖 Read the introduction post: ["Carve your controllers like Papa Carlo"](https://dev.to/evilmartians/carve-your-controllers-like-papa-carlo-32m6")
+📖 Read the introduction post: ["Carve your controllers like Papa Carlo"](https://dev.to/evilmartians/carve-your-controllers-like-papa-carlo-32m6)
 
 The typical usage is to describe all the possible collection manipulation for REST `index` action, e.g. filtering, sorting, searching, pagination, etc..
 
