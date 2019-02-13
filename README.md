@@ -206,6 +206,46 @@ Rubanok does not require Rails, but it has some useful Rails extensions such as 
 
 If you use `ActionController::Metal` you must include the `Rubanok::Controller` module yourself.
 
+## Questions & Answers
+
+- **🧐"Planish"? Is there a word?**
+
+Yes, [it is](https://en.wiktionary.org/wiki/planish).
+
+- **Where to put my _plane_ classes?**
+
+I put mine under `app/planes` (as `<resources>_plane.rb`) in my Rails app.
+
+- **I don't like the naming ("planes" ✈️?), can I still use the library?**
+
+First, feel free to [propose your variant](https://github.com/palkan/rubanok/issues). We would be glad to discuss it.
+
+Secondly, you can easily avoid it by adding a few lines to your `ApplicationController`:
+
+```ruby
+class ApplicationController < ActionController::Smth
+  # add `planish` alias
+  alias transform_scope planish
+
+  # override the `implicit_plane_class` method
+  def implicit_plane_class
+    "#{controller_path.classify.pluralize}Scoper".safe_constantize
+  end
+end
+```
+
+Now you can use it like this:
+
+```ruby
+class CourseSessionsController < ApplicationController
+  def index
+    @sessions = transform_scope(CourseSession.all, params)
+    # which equals to
+    @sessions = CourseSessionsScoper.call(CourseSession.all, params.to_unsafe_h)
+  end
+end
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/palkan/rubanok.
