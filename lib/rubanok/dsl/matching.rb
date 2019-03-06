@@ -69,7 +69,7 @@ module Rubanok
 
         rule.instance_eval(&block)
 
-        define_method(rule.to_method_name) do |params|
+        define_method(rule.to_method_name) do |params = {}|
           clause = rule.matching_clause(params)
           next raw unless clause
 

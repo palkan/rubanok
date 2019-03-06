@@ -92,6 +92,26 @@ describe "Plane.match" do
         expect(subject).to eq []
       end
     end
+
+    context "with default clause and activate_always" do
+      let(:plane) do
+        Class.new(Rubanok::Plane) do
+          match :status, activate_always: true do
+            having "past" do
+              raw.select { |item| item[:status] == "past" }
+            end
+
+            default do |status: "none"|
+              raw.select { |item| item[:status].nil? }
+            end
+          end
+        end
+      end
+
+      specify "with default value" do
+        expect(subject.size).to eq 3
+      end
+    end
   end
 
   context "multiple fields" do

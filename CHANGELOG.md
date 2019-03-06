@@ -2,6 +2,8 @@
 
 ## master
 
+- Fix using `activate_always: true` with `default` matching clause. ([@palkan][])
+
 ## 0.1.1 (2019-01-16)
 
 - Fix RSpec matcher to call original implementation instead of returning `nil`. ([@palkan][])
