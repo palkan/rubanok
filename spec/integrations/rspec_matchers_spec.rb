@@ -24,22 +24,22 @@ describe "Rubanok RSpec matchers" do
 
     specify "doesn't match data class" do
       expect do
-        expect { RspecPlane.call([], {type: "array"}) }.
-          to have_planished(Hash).with(RspecPlane)
+        expect { RspecPlane.call([], {type: "array"}) }
+          .to have_planished(Hash).with(RspecPlane)
       end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
     end
 
     specify "doesn't match plane" do
       expect do
-        expect { AnotherRspecPlane.call([], {type: "array"}) }.
-          to have_planished(Array).with(RspecPlane)
+        expect { AnotherRspecPlane.call([], {type: "array"}) }
+          .to have_planished(Array).with(RspecPlane)
       end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
     end
 
     specify "when negated" do
       expect do
-        expect { RspecPlane.call([], {type: "array"}) }.
-          not_to have_planished.with(RspecPlane)
+        expect { RspecPlane.call([], {type: "array"}) }
+          .not_to have_planished.with(RspecPlane)
       end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
     end
   end

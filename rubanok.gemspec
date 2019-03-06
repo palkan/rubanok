@@ -31,5 +31,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "rspec-rails"
   spec.add_development_dependency "rubocop-rspec"
-  spec.add_development_dependency "standard"
+  spec.add_development_dependency "standard", "~> 0.0.36"
 end
