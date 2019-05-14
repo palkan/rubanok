@@ -22,6 +22,14 @@ Gem::Specification.new do |spec|
     `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   end
 
+  spec.metadata = {
+    "bug_tracker_uri" => "http://github.com/palkan/rubanok/issues",
+    "changelog_uri" => "https://github.com/palkan/rubanok/blob/master/CHANGELOG.md",
+    "documentation_uri" => "http://github.com/palkan/rubanok",
+    "homepage_uri" => "http://github.com/palkan/rubanok",
+    "source_code_uri" => "http://github.com/palkan/rubanok"
+  }
+
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "actionpack", ">= 4.2"
