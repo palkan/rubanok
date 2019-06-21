@@ -1,3 +1,4 @@
+# typed: true
 # frozen_string_literal: true
 
 require "rubanok/rule"
@@ -30,34 +31,49 @@ module Rubanok
   #
   # You can access the input data via `raw` method.
   class Plane
+    extend T::Sig
+
     class << self
+      extend T::Sig
+
       include DSL::Mapping
       include DSL::Matching
 
+      sig { params(input: T.untyped, params: T::Hash[T.any(Symbol, String), T.untyped]).returns(T.untyped) }
       def call(input, params)
         new(input).call(params)
       end
 
+      sig { params(rule: Rule).returns(T::Array[Rule]) }
       def add_rule(rule)
         rules << rule
       end
 
+      sig {returns(T::Array[Rule])}
       def rules
         return @rules if instance_variable_defined?(:@rules)
 
+        x = superclass
+
         @rules =
-          if superclass <= Plane
-            superclass.rules.dup
+          if x
+            if x < Plane
+              x.rules.dup
+            else
+              []
+            end
           else
             []
           end
       end
     end
 
+    sig { params(input: T.untyped).void }
     def initialize(input)
       @input = input
     end
 
+    sig { params(params: T::Hash[T.any(Symbol, String), T.untyped]).returns(T.untyped) }
     def call(params)
       params = params.symbolize_keys
 
@@ -76,6 +92,7 @@ module Rubanok
 
     alias raw input
 
+    sig { params(method_name: String, data: T.untyped).returns(T.untyped) }
     def apply_rule!(method_name, data)
       self.input =
         if data.empty?
@@ -85,6 +102,7 @@ module Rubanok
         end
     end
 
+    sig { returns(T::Array[Rule]) }
     def rules
       self.class.rules
     end
