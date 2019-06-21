@@ -1,3 +1,4 @@
+# typed: strict
 # frozen_string_literal: true
 
 # Set up gems listed in the Gemfile.

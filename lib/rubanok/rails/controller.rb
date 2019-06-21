@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 require "active_support/concern"
@@ -26,7 +27,7 @@ module Rubanok
 
       plane_params ||= params
 
-      plane_params = plane_params.to_unsafe_h if plane_params.is_a?(ActionController::Parameters)
+      plane_params = plane_params.to_unsafe_h if plane_params.is_a?(::ActionController::Parameters)
       with.call(data, plane_params)
     end
 
