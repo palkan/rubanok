@@ -1,3 +1,4 @@
+# typed: true
 # frozen_string_literal: true
 
 module Rubanok
@@ -14,20 +15,39 @@ module Rubanok
     #     end
     #   end
     module Matching
+      extend T::Sig
+      extend T::Helpers
+
+      abstract!
+
       class Rule < Rubanok::Rule
         METHOD_PREFIX = "__match"
 
         class Clause < Rubanok::Rule
+          extend T::Sig
+
           attr_reader :values, :id, :block
 
-          def initialize(id, fields, values = [], **options, &block)
-            super(fields, options)
+          sig do
+            params(
+              id: String,
+              fields: T::Array[Symbol],
+              values: T::Array[T.untyped],
+              activate_on: T.any(Symbol, T::Array[Symbol]),
+              activate_always: T::Boolean,
+              block: T.proc.void
+            )
+              .void
+          end
+          def initialize(id, fields, values = [], activate_on: fields, activate_always: false, &block)
+            super(fields, activate_on: activate_on, activate_always: activate_always)
             @id = id
             @block = block
             @values = Hash[fields.take(values.size).zip(values)].freeze
             @fields = (fields - @values.keys).freeze
           end
 
+          sig { params(params: T::Hash[T.any(Symbol, String), T.untyped]).returns(T::Boolean) }
           def applicable?(params)
             values.all? { |key, matcher| params.key?(key) && (matcher == params[key]) }
           end
@@ -42,16 +62,19 @@ module Rubanok
           @clauses = []
         end
 
+        sig { params(params: T::Hash[T.any(Symbol, String), T.untyped]).returns(T.nilable(Clause)) }
         def matching_clause(params)
           clauses.detect do |clause|
             clause.applicable?(params)
           end
         end
 
+        sig { params(values: T.untyped, block: T.proc.void).returns(T::Array[Clause]) }
         def having(*values, &block)
           clauses << Clause.new("#{to_method_name}_#{clauses.size}", fields, values, &block)
         end
 
+        sig { params(block: T.proc.void).returns(T::Array[Clause]) }
         def default(&block)
           clauses << Clause.new("#{to_method_name}_default", fields, activate_always: true, &block)
         end
@@ -64,8 +87,17 @@ module Rubanok
         end
       end
 
-      def match(*fields, **options, &block)
-        rule = Rule.new(fields, options)
+      sig do
+        params(
+          fields: Symbol,
+          activate_on: T.any(Symbol, T::Array[Symbol]),
+          activate_always: T::Boolean,
+          block: T.proc.void
+        )
+          .returns(T::Array[Rubanok::Rule])
+      end
+      def match(*fields, activate_on: fields, activate_always: false, &block)
+        rule = Rule.new(fields, activate_on: activate_on, activate_always: activate_always)
 
         rule.instance_eval(&block)
 
@@ -81,6 +113,21 @@ module Rubanok
         end
 
         rules << rule
+      end
+
+      sig { abstract.returns(T::Array[Rubanok::Rule]) }
+      def rules
+      end
+
+      sig do
+        abstract
+          .params(
+            arg0: T.any(Symbol, String),
+            blk: BasicObject,
+          )
+          .returns(Symbol)
+      end
+      def define_method(arg0, &blk)
       end
     end
   end

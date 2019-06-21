@@ -49,7 +49,7 @@ module Rubanok
         rules << rule
       end
 
-      sig {returns(T::Array[Rule])}
+      sig { implementation.returns(T::Array[Rule]) }
       def rules
         return @rules if instance_variable_defined?(:@rules)
 
