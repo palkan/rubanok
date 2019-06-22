@@ -7,7 +7,7 @@
 #
 #   https://github.com/sorbet/sorbet-typed/new/master?filename=lib/sorbet-runtime/all/sorbet-runtime.rbi
 #
-# sorbet-runtime-0.4.4279
+# sorbet-runtime-0.4.4280
 module T::Configuration
   def self.call_validation_error_handler(signature, opts); end
   def self.call_validation_error_handler=(value); end

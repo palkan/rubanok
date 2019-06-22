@@ -221,3 +221,5 @@ module SimpleCov::CommandGuesser
   def self.original_run_command; end
   def self.original_run_command=(arg0); end
 end
+class SimpleCov::Railtie < Rails::Railtie
+end

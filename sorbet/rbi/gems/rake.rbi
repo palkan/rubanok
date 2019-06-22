@@ -255,6 +255,7 @@ class Rake::FileList
   def existing!; end
   def existing; end
   def ext(newext = nil); end
+  def extract_options!(*args, &block); end
   def fetch(*args, &block); end
   def fill(*args, &block); end
   def filter!(*args, &block); end
@@ -347,9 +348,13 @@ class Rake::FileList
   def take_while(*args, &block); end
   def to_a; end
   def to_ary; end
+  def to_default_s(*args, &block); end
+  def to_formatted_s(*args, &block); end
   def to_h(*args, &block); end
   def to_s; end
+  def to_sentence(*args, &block); end
   def to_set(*args, &block); end
+  def to_xml(*args, &block); end
   def transpose(*args, &block); end
   def union(*args, &block); end
   def uniq!(*args, &block); end

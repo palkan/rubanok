@@ -2,14 +2,6 @@
 #   srb rbi todo
 
 # typed: strong
-module ::ActionController::Base; end
-module ::ActionController::Base; end
-module ::ActionController::Parameters; end
-module ::ActionPack; end
-module ActionDispatch::Routing::Mapper; end
-module ActiveSupport::ActionController::Base; end
-module ActiveSupport::Deprecation; end
+module ::Anonymous_Delegator_2; end
+module ActionMailer::Base::Mail::Message; end
 module RSpec::Rails::ControllerExampleGroup; end
-module Rails::Railtie; end
-module Rubanok::Railtie::ActionController::API; end
-module Rubanok::Railtie::ActionController::Base; end
