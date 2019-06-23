@@ -76,7 +76,7 @@ describe PostsController do
 
     # ?? Rails 4.2 failes with ThreadError: already initialized
     before do
-      @response.define_singleton_method(:recycle!) { }
+      @response.define_singleton_method(:recycle!) {}
     end
 
     specify "implicit plane" do
