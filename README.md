@@ -165,7 +165,7 @@ One of the benefits of having modification logic contained in its own class is t
 
 ```ruby
 # For example, with RSpec
-describe CourseSessionsPlane do
+RSpec.describe CourseSessionsPlane do
   let(:input ) { CourseSession.all }
   let(:params) { {} }
 
@@ -182,7 +182,7 @@ end
 Now in your controller you only have to test that the specific _plane_ is applied:
 
 ```ruby
-describe CourseSessionController do
+RSpec.describe CourseSessionController do
   subject { get :index }
 
   specify do
