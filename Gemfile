@@ -5,6 +5,7 @@ gemspec
 
 gem "pry-byebug", platform: :mri
 gem "simplecov"
+gem "sorbet"
 
 local_gemfile = 'Gemfile.local'
 
