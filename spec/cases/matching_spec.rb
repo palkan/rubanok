@@ -112,6 +112,23 @@ describe "Plane.match" do
         expect(subject.size).to eq 3
       end
     end
+
+    context "with fail_when_no_matches" do
+      let(:plane) do
+        Class.new(Rubanok::Plane) do
+          match :status, fail_when_no_matches: true do
+            having "past" do
+              raw.select { |item| item[:status] == "past" }
+            end
+          end
+        end
+      end
+
+      specify "when no matching value" do
+        params["status"] = "unknown"
+        expect { subject }.to raise_error(Rubanok::BadValueError)
+      end
+    end
   end
 
   context "multiple fields" do

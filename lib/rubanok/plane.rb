@@ -30,9 +30,10 @@ module Rubanok
   #
   # You can access the input data via `raw` method.
   class Plane
+    extend DSL::Matching
+
     class << self
       include DSL::Mapping
-      include DSL::Matching
 
       def call(input, params)
         new(input).call(params)

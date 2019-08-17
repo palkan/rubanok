@@ -64,16 +64,30 @@ module Rubanok
         end
       end
 
+      module InstanceMethods
+        def default_match_handler(rule, params, fail_when_no_matches = false)
+          return raw unless fail_when_no_matches
+
+          fail ::Rubanok::BadValueError, <<~MSG
+            Bad value(s) for #{rule.fields.join(", ")}: #{params.slice(*rule.fields).values.join(", ")}
+          MSG
+        end
+      end
+
+      def self.extended(base)
+        base.include InstanceMethods
+      end
+
       def match(*fields, **options, &block)
-        rule = Rule.new(fields, options)
+        rule = Rule.new(fields, options.slice(:activate_on, :activate_always))
 
         rule.instance_eval(&block)
 
         define_method(rule.to_method_name) do |params = {}|
-          clause = rule.matching_clause(params)
-          next raw unless clause
+          @clause = rule.matching_clause(params)
+          next default_match_handler(rule, params, options[:fail_when_no_matches]) unless @clause
 
-          apply_rule! clause.to_method_name, clause.project(params)
+          apply_rule! @clause.to_method_name, @clause.project(params)
         end
 
         rule.clauses.each do |clause|

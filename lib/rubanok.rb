@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rubanok/version"
+require "rubanok/bad_value_error"
 require "rubanok/plane"
 
 require "rubanok/railtie" if defined?(Rails)

@@ -132,6 +132,18 @@ class CourseSessionsPlane < Rubanok::Plane
       raw.order(sort_by => sort)
     end
   end
+
+  # strict matching; if Plane will not match parameter, it will raise Rubanok::BadValueError
+  # You can handle it in controller, for example, with sending 400 to client
+  match :filter, fail_when_no_matches: true do
+    having "active" do
+      raw.active
+    end
+
+    having "finished" do
+      raw.finished
+    end
+  end
 end
 ```
 
