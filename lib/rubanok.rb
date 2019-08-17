@@ -16,7 +16,7 @@ end
 #
 #   class CourseSessionPlane < Rubanok::Plane
 #     map :q do |q:|
-#      raw.searh(q)
+#       raw.searh(q)
 #     end
 #   end
 #
@@ -31,7 +31,10 @@ module Rubanok
     # When the value is empty and ignored the corresponding matcher/mapper
     # is not activated (true by default)
     attr_accessor :ignore_empty_values
+    # Define wheter to fail when `match` rule cannot find matching value
+    attr_accessor :fail_when_no_matches
   end
 
   self.ignore_empty_values = true
+  self.fail_when_no_matches = false
 end

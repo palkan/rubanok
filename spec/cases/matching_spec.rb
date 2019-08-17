@@ -129,6 +129,36 @@ describe "Plane.match" do
         expect { subject }.to raise_error(Rubanok::BadValueError)
       end
     end
+
+    context "Rubanok.fail_when_no_matches" do
+      let(:plane) do
+        Class.new(Rubanok::Plane) do
+          match :status do
+            having "past" do
+              raw.select { |item| item[:status] == "past" }
+            end
+          end
+        end
+      end
+
+      let(:params) { Hash[status: "unknown"] }
+
+      around do |ex|
+        was_value = Rubanok.fail_when_no_matches
+        ex.run
+        Rubanok.fail_when_no_matches = was_value
+      end
+
+      specify "true" do
+        Rubanok.fail_when_no_matches = true
+        expect { subject }.to raise_error(Rubanok::BadValueError)
+      end
+
+      specify "false" do
+        Rubanok.fail_when_no_matches = false
+        expect(subject).to eq(input)
+      end
+    end
   end
 
   context "multiple fields" do
