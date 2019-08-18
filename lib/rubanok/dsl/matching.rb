@@ -66,7 +66,7 @@ module Rubanok
 
       module InstanceMethods
         def default_match_handler(rule, params, fail_when_no_matches)
-          fail_when_no_matches ||= Rubanok.fail_when_no_matches
+          fail_when_no_matches = Rubanok.fail_when_no_matches if fail_when_no_matches.nil?
           return raw unless fail_when_no_matches
 
           fail ::Rubanok::BadValueError, <<~MSG

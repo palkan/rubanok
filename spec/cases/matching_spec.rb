@@ -159,6 +159,29 @@ describe "Plane.match" do
         expect(subject).to eq(input)
       end
     end
+
+    context "when Rubanok.fail_when_no_matches = true and explicitly passed false" do
+      let(:plane) do
+        Class.new(Rubanok::Plane) do
+          match :status, fail_when_no_matches: false do
+            having "past" do
+              raw.select { |item| item[:status] == "past" }
+            end
+          end
+        end
+      end
+
+      around do |ex|
+        was_value = Rubanok.fail_when_no_matches
+        Rubanok.fail_when_no_matches = true
+        ex.run
+        Rubanok.fail_when_no_matches = was_value
+      end
+
+      it "does not fail" do
+        expect(subject).to eq(input)
+      end
+    end
   end
 
   context "multiple fields" do
