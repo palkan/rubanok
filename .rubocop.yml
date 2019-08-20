@@ -23,6 +23,9 @@ Style/TrailingCommaInArrayLiteral:
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: no_comma
 
+Style/SignalException:
+  Enabled: true
+
 Style/FrozenStringLiteralComment:
   Enabled: true
 

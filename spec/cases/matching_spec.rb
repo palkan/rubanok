@@ -126,7 +126,7 @@ describe "Plane.match" do
 
       specify "when no matching value" do
         params["status"] = "unknown"
-        expect { subject }.to raise_error(Rubanok::BadValueError)
+        expect { subject }.to raise_error(Rubanok::UnexpectedInputError)
       end
     end
 
@@ -151,7 +151,7 @@ describe "Plane.match" do
 
       specify "true" do
         Rubanok.fail_when_no_matches = true
-        expect { subject }.to raise_error(Rubanok::BadValueError)
+        expect { subject }.to raise_error(Rubanok::UnexpectedInputError)
       end
 
       specify "false" do

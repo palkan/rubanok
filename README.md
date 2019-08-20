@@ -147,7 +147,8 @@ class CourseSessionsPlane < Rubanok::Plane
 end
 ```
 
-By default, Rubanok will not fail if no matches found in `match` rule. You can change it by setting: `Rubanok.fail_when_no_matches = true`
+By default, Rubanok will not fail if no matches found in `match` rule. You can change it by setting: `Rubanok.fail_when_no_matches = true`.
+If in example above you will call `CourseSessionsPlane.call(CourseSession, filter: 'acitve')`, you will get `Rubanok::UnexpectedInputError: Unexpected input: {:filter=>'acitve'}`
 
 **NOTE:** Rubanok only matches exact values; more complex matching could be added in the future.
 
