@@ -66,36 +66,36 @@ module Rubanok
         end
       end
 
-      module InstanceMethods
-        def default_match_handler(rule, params, fail_when_no_matches)
-          fail_when_no_matches = Rubanok.fail_when_no_matches if fail_when_no_matches.nil?
-          return raw unless fail_when_no_matches
+      module ClassMethods
+        def match(*fields, **options, &block)
+          rule = Rule.new(fields, options.slice(:activate_on, :activate_always))
 
-          raise ::Rubanok::UnexpectedInputError, "Unexpected input: #{params.slice(*rule.fields)}"
+          rule.instance_eval(&block)
+
+          define_method(rule.to_method_name) do |params = {}|
+            clause = rule.matching_clause(params)
+            next default_match_handler(rule, params, options[:fail_when_no_matches]) unless clause
+
+            apply_rule! clause.to_method_name, clause.project(params)
+          end
+
+          rule.clauses.each do |clause|
+            define_method(clause.to_method_name, &clause.block)
+          end
+
+          rules << rule
         end
       end
 
-      def self.extended(base)
-        base.include InstanceMethods
+      def self.included(base)
+        base.extend ClassMethods
       end
 
-      def match(*fields, **options, &block)
-        rule = Rule.new(fields, options.slice(:activate_on, :activate_always))
+      def default_match_handler(rule, params, fail_when_no_matches)
+        fail_when_no_matches = Rubanok.fail_when_no_matches if fail_when_no_matches.nil?
+        return raw unless fail_when_no_matches
 
-        rule.instance_eval(&block)
-
-        define_method(rule.to_method_name) do |params = {}|
-          clause = rule.matching_clause(params)
-          next default_match_handler(rule, params, options[:fail_when_no_matches]) unless clause
-
-          apply_rule! clause.to_method_name, clause.project(params)
-        end
-
-        rule.clauses.each do |clause|
-          define_method(clause.to_method_name, &clause.block)
-        end
-
-        rules << rule
+        raise ::Rubanok::UnexpectedInputError, "Unexpected input: #{params.slice(*rule.fields)}"
       end
     end
   end
