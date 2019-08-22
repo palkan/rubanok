@@ -95,7 +95,11 @@ module Rubanok
         fail_when_no_matches = Rubanok.fail_when_no_matches if fail_when_no_matches.nil?
         return raw unless fail_when_no_matches
 
-        raise ::Rubanok::UnexpectedInputError, "Unexpected input: #{params.slice(*rule.fields)}"
+        raise ::Rubanok::UnexpectedInputError, <<~MSG
+          Unexpected input: #{params.slice(*rule.fields)}.
+          Available values are:
+            #{rule.clauses.map(&:values).join("\n  ")}
+        MSG
       end
     end
   end
