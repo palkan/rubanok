@@ -133,8 +133,8 @@ class CourseSessionsPlane < Rubanok::Plane
     end
   end
 
-  # strict matching; if Plane will not match parameter, it will raise Rubanok::BadValueError
-  # You can handle it in controller, for example, with sending 400 to client
+  # strict matching; if Plane will not match parameter, it will raise Rubanok::UnexpectedInputError
+  # You can handle it in controller, for example, with sending 422 Unprocessable Entity to client
   match :filter, fail_when_no_matches: true do
     having "active" do
       raw.active
@@ -148,7 +148,7 @@ end
 ```
 
 By default, Rubanok will not fail if no matches found in `match` rule. You can change it by setting: `Rubanok.fail_when_no_matches = true`.
-If in example above you will call `CourseSessionsPlane.call(CourseSession, filter: 'acitve')`, you will get `Rubanok::UnexpectedInputError: Unexpected input: {:filter=>'acitve'}`
+If in example above you will call `CourseSessionsPlane.call(CourseSession, filter: 'acitve')`, you will get `Rubanok::UnexpectedInputError: Unexpected input: {:filter=>'acitve'}`.
 
 **NOTE:** Rubanok only matches exact values; more complex matching could be added in the future.
 
