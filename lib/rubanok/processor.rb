@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "set"
+
 require "rubanok/rule"
 
 require "rubanok/dsl/mapping"
@@ -39,6 +41,7 @@ module Rubanok
       end
 
       def add_rule(rule)
+        fields_set.merge rule.fields
         rules << rule
       end
 
@@ -51,6 +54,23 @@ module Rubanok
           else
             []
           end
+      end
+
+      def fields_set
+        return @fields_set if instance_variable_defined?(:@fields_set)
+
+        @fields_set =
+          if superclass <= Processor
+            superclass.fields_set.dup
+          else
+            Set.new
+          end
+      end
+
+      # Generates a `params` projection including only the keys used
+      # by the rules
+      def project(params)
+        params.slice(*fields_set)
       end
     end
 

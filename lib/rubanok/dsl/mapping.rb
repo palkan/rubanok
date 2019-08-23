@@ -26,7 +26,7 @@ module Rubanok
 
           define_method(rule.to_method_name, &block)
 
-          rules << rule
+          add_rule rule
         end
       end
 
