@@ -21,3 +21,4 @@ Initial implementation.
 Proposal added.
 
 [@palkan]: https://github.com/palkan
+[@Earendil95]: https://github.com/Earendil95
