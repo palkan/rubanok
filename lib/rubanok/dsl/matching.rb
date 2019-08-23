@@ -4,7 +4,7 @@ module Rubanok
   class UnexpectedInputError < StandardError; end
 
   module DSL
-    # Adds `.match` method to Plane class to define key-value-matching rules:
+    # Adds `.match` method to Processor class to define key-value-matching rules:
     #
     #   match :sort, :sort_by do |sort:, sort_by:|
     #     # this rule is activated iff both "sort" and "sort_by" params are present

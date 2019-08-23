@@ -14,6 +14,8 @@ class PostsPlane < Rubanok::Plane
   end
 end
 
+PostsProcessor = PostsPlane
+
 if ActionPack.version.release < Gem::Version.new("5")
   using(Module.new do
     refine Hash do
@@ -52,7 +54,7 @@ class PostsController < ActionController::Base
   ].freeze
 
   def explicit
-    data = planish(
+    data = rubanok_process(
       FAKE_DATA,
       params.require(:filter),
       with: ::RejectPlane
@@ -60,8 +62,13 @@ class PostsController < ActionController::Base
     render json: data
   end
 
-  def implicit
+  def implicit_plane
     data = planish(FAKE_DATA)
+    render json: data
+  end
+
+  def implicit
+    data = rubanok_process(FAKE_DATA)
     render json: data
   end
 end
@@ -79,13 +86,19 @@ describe PostsController do
       @response.define_singleton_method(:recycle!) {}
     end
 
-    specify "implicit plane" do
+    specify "implicit rubanok" do
       get :implicit, {type: "sports"}.to_params
 
       expect(data.size).to eq 2
     end
 
-    specify "explicit plane" do
+    specify "implicit plane" do
+      get :implicit_plane, {type: "sports"}.to_params
+
+      expect(data.size).to eq 2
+    end
+
+    specify "explicit" do
       get :explicit, {filter: {type: "sports"}}.to_params
 
       expect(data.size).to eq 1

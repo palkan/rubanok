@@ -28,13 +28,13 @@ You have:
 ```ruby
 class CourseSessionController < ApplicationController
   def index
-    @sessions = planish(
+    @sessions = rubanok_process(
       # pass input
       CourseSession.all,
       # pass params
       params,
-      # provide a plane to use
-      with: CourseSessionsPlane
+      # provide a processor to use
+      with: CourseSessionsProcessor
     )
   end
 end
@@ -42,16 +42,16 @@ end
 
 Or we can try to infer all the configuration for you:
 
-
 ```ruby
 class CourseSessionController < ApplicationController
   def index
-    @sessions = planish(CourseSession.all)
+    @sessions = rubanok_process(CourseSession.all)
   end
 end
 ```
 
 Requirements:
+
 - Ruby ~> 2.5
 - Rails >= 4.2 (only for using with Rails)
 
@@ -70,12 +70,12 @@ And run `bundle install`.
 
 ## Usage
 
-The core concept of this library is a _plane_ (or _hand plane_, or "рубанок" in Russian). Plane is responsible for mapping parameters to transformations.
+The core concept of this library is a processor (previously called _plane_ or _hand plane_, or "рубанок" in Russian). Processor is responsible for mapping parameters to transformations.
 
 From the example above:
 
 ```ruby
-class CourseSessionsPlane < Rubanok::Plane
+class CourseSessionsProcessor < Rubanok::Processor
   # You can map keys
   map :q do |q:|
     # `raw` is an accessor for input data
@@ -84,7 +84,7 @@ class CourseSessionsPlane < Rubanok::Plane
 end
 
 # The following code
-CourseSessionsPlane.call(CourseSession.all, q: "xyz")
+CourseSessionsProcessor.call(CourseSession.all, q: "xyz")
 
 # is equal to
 CourseSession.all.search("xyz")
@@ -93,7 +93,7 @@ CourseSession.all.search("xyz")
 You can map multiple keys at once:
 
 ```ruby
-class CourseSessionsPlane < Rubanok::Plane
+class CourseSessionsProcessor < Rubanok::Processor
   DEFAULT_PAGE_SIZE = 25
 
   map :page, :per_page do |page:, per_page: DEFAULT_PAGE_SIZE|
@@ -105,7 +105,7 @@ end
 There is also `match` method to handle values:
 
 ```ruby
-class CourseSessionsPlane < Rubanok::Plane
+class CourseSessionsProcessor < Rubanok::Processor
   SORT_ORDERS = %w(asc desc).freeze
   SORTABLE_FIELDS = %w(id name created_at).freeze
 
@@ -133,7 +133,7 @@ class CourseSessionsPlane < Rubanok::Plane
     end
   end
 
-  # strict matching; if Plane will not match parameter, it will raise Rubanok::UnexpectedInputError
+  # strict matching; if Processor will not match parameter, it will raise Rubanok::UnexpectedInputError
   # You can handle it in controller, for example, with sending 422 Unprocessable Entity to client
   match :filter, fail_when_no_matches: true do
     having "active" do
@@ -148,7 +148,7 @@ end
 ```
 
 By default, Rubanok will not fail if no matches found in `match` rule. You can change it by setting: `Rubanok.fail_when_no_matches = true`.
-If in example above you will call `CourseSessionsPlane.call(CourseSession, filter: 'acitve')`, you will get `Rubanok::UnexpectedInputError: Unexpected input: {:filter=>'acitve'}`.
+If in example above you will call `CourseSessionsProcessor.call(CourseSession, filter: 'acitve')`, you will get `Rubanok::UnexpectedInputError: Unexpected input: {:filter=>'acitve'}`.
 
 **NOTE:** Rubanok only matches exact values; more complex matching could be added in the future.
 
@@ -180,7 +180,7 @@ One of the benefits of having modification logic contained in its own class is t
 
 ```ruby
 # For example, with RSpec
-RSpec.describe CourseSessionsPlane do
+RSpec.describe CourseSessionsProcessor do
   let(:input ) { CourseSession.all }
   let(:params) { {} }
 
@@ -201,15 +201,15 @@ RSpec.describe CourseSessionController do
   subject { get :index }
 
   specify do
-    expect { subject }.to have_planished(CourseSession.all).
-      with(CourseSessionsPlane)
+    expect { subject }.to have_rubanok_processed(CourseSession.all).
+      with(CourseSessionsProcessor)
   end
 end
 ```
 
 **NOTE**: input matching only checks for the class equality.
 
-To use `have_planished` matcher you must add the following line to your `spec_helper.rb` / `rails_helper.rb` (it's added automatically if RSpec defined and `RAILS_ENV`/`RACK_ENV` is equal to `"test"`):
+To use `have_rubanok_processed` matcher you must add the following line to your `spec_helper.rb` / `rails_helper.rb` (it's added automatically if RSpec defined and `RAILS_ENV`/`RACK_ENV` is equal to `"test"`):
 
 ```ruby
 require "rubanok/rspec"
@@ -217,33 +217,20 @@ require "rubanok/rspec"
 
 ### Rails vs. non-Rails
 
-Rubanok does not require Rails, but it has some useful Rails extensions such as `planish` helper for controllers (included automatically into `ActionController::Base` and `ActionController::API`).
+Rubanok does not require Rails, but it has some useful Rails extensions such as `rubanok_process` helper for controllers (included automatically into `ActionController::Base` and `ActionController::API`).
 
 If you use `ActionController::Metal` you must include the `Rubanok::Controller` module yourself.
 
-## Questions & Answers
+### Processor class inference in Rails controllers
 
-- **🧐"Planish"? Is there a word?**
+By default, `rubanok_process` uses the following algorithm to define a processor class: `"#{controller_path.classify.pluralize}Processor".safe_constantize`.
 
-Yes, [it is](https://en.wiktionary.org/wiki/planish).
-
-- **Where to put my _plane_ classes?**
-
-I put mine under `app/planes` (as `<resources>_plane.rb`) in my Rails app.
-
-- **I don't like the naming ("planes" ✈️?), can I still use the library?**
-
-First, feel free to [propose your variant](https://github.com/palkan/rubanok/issues). We would be glad to discuss it.
-
-Secondly, you can easily avoid it by adding a few lines to your `ApplicationController`:
+You can change this by overriding the `#implicit_rubanok_class` method:
 
 ```ruby
 class ApplicationController < ActionController::Smth
-  # add `planish` alias
-  alias transform_scope planish
-
-  # override the `implicit_plane_class` method
-  def implicit_plane_class
+  # override the `implicit_rubanok_class` method
+  def implicit_rubanok_class
     "#{controller_path.classify.pluralize}Scoper".safe_constantize
   end
 end
@@ -254,12 +241,24 @@ Now you can use it like this:
 ```ruby
 class CourseSessionsController < ApplicationController
   def index
-    @sessions = transform_scope(CourseSession.all, params)
+    @sessions = rubanok_process(CourseSession.all, params)
     # which equals to
     @sessions = CourseSessionsScoper.call(CourseSession.all, params.to_unsafe_h)
   end
 end
 ```
+
+**NOTE:** the `planish` method is still available and it uses `#{controller_path.classify.pluralize}Plane".safe_constantize` under the hood (via the `#implicit_plane_class` method).
+
+## Questions & Answers
+
+- **Where to put my processor/plane classes?**
+
+I put mine under `app/planes` (as `<resources>_plane.rb`) in my Rails app.
+
+- **I don't like the naming ("planes" ✈️?), can I still use the library?**
+
+Good news—the default naming has been changed. "Planes" are still available if you prefer them (just like me 😉).
 
 ## Contributing
 

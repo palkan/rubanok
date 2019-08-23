@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "rubanok/version"
-require "rubanok/plane"
+require "rubanok/processor"
 
 require "rubanok/railtie" if defined?(Rails)
 
@@ -13,7 +13,7 @@ end
 #
 # Example:
 #
-#   class CourseSessionPlane < Rubanok::Plane
+#   class CourseSessionProcessor < Rubanok::Processor
 #     map :q do |q:|
 #       raw.searh(q)
 #     end
@@ -21,7 +21,7 @@ end
 #
 #   class CourseSessionController < ApplicationController
 #     def index
-#       @sessions = planish(CourseSession.all)
+#       @sessions = rubanok_process(CourseSession.all)
 #     end
 #   end
 module Rubanok

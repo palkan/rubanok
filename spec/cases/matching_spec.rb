@@ -132,7 +132,7 @@ describe "Plane.match" do
 
     context "Rubanok.fail_when_no_matches" do
       let(:plane) do
-        Class.new(Rubanok::Plane) do
+        Class.new(Rubanok::Processor) do
           match :status do
             having "past" do
               raw.select { |item| item[:status] == "past" }

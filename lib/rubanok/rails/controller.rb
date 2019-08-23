@@ -4,24 +4,24 @@ require "active_support/concern"
 
 module Rubanok
   # Controller concern.
-  # Adds `planish` method.
+  # Adds `rubanok_process` method.
   module Controller
     extend ActiveSupport::Concern
 
-    # Planish passed data (e.g. ActiveRecord relation) using
-    # the corresponding Plane class.
+    # This method passed data (e.g. ActiveRecord relation) using
+    # the corresponding Processor class.
     #
-    # Plane is inferred from controller name, e.g.
-    # "PostsController -> PostPlane".
+    # Processor is inferred from controller name, e.g.
+    # "PostsController -> PostProcessor".
     #
-    # You can specify the Plane class explicitly via `with` option.
+    # You can specify the Processor class explicitly via `with` option.
     #
     # By default, `params` object is passed as parameters, but you
     # can specify the params via `params` option.
-    def planish(data, plane_params = nil, with: implicit_plane_class)
+    def rubanok_process(data, plane_params = nil, with: implicit_rubanok_class)
       if with.nil?
-        raise ArgumentError, "Failed to find a plane class for #{self.class.name}. " \
-                             "Please, specify the plane class explicitly via `with` option"
+        raise ArgumentError, "Failed to find a processor class for #{self.class.name}. " \
+                             "Please, specify the processor class explicitly via `with` option"
       end
 
       plane_params ||= params
@@ -30,7 +30,15 @@ module Rubanok
       with.call(data, plane_params)
     end
 
-    # Tries to infer the plane class from controller path
+    def planish(*args, with: implicit_plane_class)
+      rubanok_process(*args, with: with)
+    end
+
+    # Tries to infer the rubanok processor class from controller path
+    def implicit_rubanok_class
+      "#{controller_path.classify.pluralize}Processor".safe_constantize
+    end
+
     def implicit_plane_class
       "#{controller_path.classify.pluralize}Plane".safe_constantize
     end
