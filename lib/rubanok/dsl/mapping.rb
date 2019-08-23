@@ -20,12 +20,18 @@ module Rubanok
         end
       end
 
-      def map(*fields, **options, &block)
-        rule = Rule.new(fields, options)
+      module ClassMethods
+        def map(*fields, **options, &block)
+          rule = Rule.new(fields, options)
 
-        define_method(rule.to_method_name, &block)
+          define_method(rule.to_method_name, &block)
 
-        rules << rule
+          rules << rule
+        end
+      end
+
+      def self.included(base)
+        base.extend ClassMethods
       end
     end
   end

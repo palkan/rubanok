@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Rubanok
+  class UnexpectedInputError < StandardError; end
+
   module DSL
     # Adds `.match` method to Plane class to define key-value-matching rules:
     #
@@ -64,23 +66,40 @@ module Rubanok
         end
       end
 
-      def match(*fields, **options, &block)
-        rule = Rule.new(fields, options)
+      module ClassMethods
+        def match(*fields, **options, &block)
+          rule = Rule.new(fields, options.slice(:activate_on, :activate_always))
 
-        rule.instance_eval(&block)
+          rule.instance_eval(&block)
 
-        define_method(rule.to_method_name) do |params = {}|
-          clause = rule.matching_clause(params)
-          next raw unless clause
+          define_method(rule.to_method_name) do |params = {}|
+            clause = rule.matching_clause(params)
+            next default_match_handler(rule, params, options[:fail_when_no_matches]) unless clause
 
-          apply_rule! clause.to_method_name, clause.project(params)
+            apply_rule! clause.to_method_name, clause.project(params)
+          end
+
+          rule.clauses.each do |clause|
+            define_method(clause.to_method_name, &clause.block)
+          end
+
+          rules << rule
         end
+      end
 
-        rule.clauses.each do |clause|
-          define_method(clause.to_method_name, &clause.block)
-        end
+      def self.included(base)
+        base.extend ClassMethods
+      end
 
-        rules << rule
+      def default_match_handler(rule, params, fail_when_no_matches)
+        fail_when_no_matches = Rubanok.fail_when_no_matches if fail_when_no_matches.nil?
+        return raw unless fail_when_no_matches
+
+        raise ::Rubanok::UnexpectedInputError, <<~MSG
+          Unexpected input: #{params.slice(*rule.fields)}.
+          Available values are:
+            #{rule.clauses.map(&:values).join("\n  ")}
+        MSG
       end
     end
   end

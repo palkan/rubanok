@@ -112,6 +112,76 @@ describe "Plane.match" do
         expect(subject.size).to eq 3
       end
     end
+
+    context "with fail_when_no_matches" do
+      let(:plane) do
+        Class.new(Rubanok::Plane) do
+          match :status, fail_when_no_matches: true do
+            having "past" do
+              raw.select { |item| item[:status] == "past" }
+            end
+          end
+        end
+      end
+
+      specify "when no matching value" do
+        params["status"] = "unknown"
+        expect { subject }.to raise_error(Rubanok::UnexpectedInputError)
+      end
+    end
+
+    context "Rubanok.fail_when_no_matches" do
+      let(:plane) do
+        Class.new(Rubanok::Plane) do
+          match :status do
+            having "past" do
+              raw.select { |item| item[:status] == "past" }
+            end
+          end
+        end
+      end
+
+      let(:params) { Hash[status: "unknown"] }
+
+      around do |ex|
+        was_value = Rubanok.fail_when_no_matches
+        ex.run
+        Rubanok.fail_when_no_matches = was_value
+      end
+
+      specify "true" do
+        Rubanok.fail_when_no_matches = true
+        expect { subject }.to raise_error(Rubanok::UnexpectedInputError)
+      end
+
+      specify "false" do
+        Rubanok.fail_when_no_matches = false
+        expect(subject).to eq(input)
+      end
+    end
+
+    context "when Rubanok.fail_when_no_matches = true and explicitly passed false" do
+      let(:plane) do
+        Class.new(Rubanok::Plane) do
+          match :status, fail_when_no_matches: false do
+            having "past" do
+              raw.select { |item| item[:status] == "past" }
+            end
+          end
+        end
+      end
+
+      around do |ex|
+        was_value = Rubanok.fail_when_no_matches
+        Rubanok.fail_when_no_matches = true
+        ex.run
+        Rubanok.fail_when_no_matches = was_value
+      end
+
+      it "does not fail" do
+        expect(subject).to eq(input)
+      end
+    end
   end
 
   context "multiple fields" do

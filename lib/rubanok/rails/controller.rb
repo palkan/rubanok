@@ -9,14 +9,14 @@ module Rubanok
     extend ActiveSupport::Concern
 
     # Planish passed data (e.g. ActiveRecord relation) using
-    # the corrsponding Plane class.
+    # the corresponding Plane class.
     #
     # Plane is inferred from controller name, e.g.
     # "PostsController -> PostPlane".
     #
     # You can specify the Plane class explicitly via `with` option.
     #
-    # By default, `params` object is passed as paraters, but you
+    # By default, `params` object is passed as parameters, but you
     # can specify the params via `params` option.
     def planish(data, plane_params = nil, with: implicit_plane_class)
       if with.nil?

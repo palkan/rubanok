@@ -2,6 +2,8 @@
 
 ## master
 
+- Add `fail_when_no_matches` parameter to `match` method. ([@Earendil95][])
+
 ## 0.1.3 (2019-03-05)
 
 - Fix using `activate_always: true` with `default` matching clause. ([@palkan][])
@@ -19,3 +21,4 @@ Initial implementation.
 Proposal added.
 
 [@palkan]: https://github.com/palkan
+[@Earendil95]: https://github.com/Earendil95
