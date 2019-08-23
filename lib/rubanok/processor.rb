@@ -9,27 +9,27 @@ require "rubanok/ext/symbolize_keys"
 using Rubanok::SymbolizeKeys
 
 module Rubanok
-  # Base class for transformers (_planes_)
+  # Base class for processors (_planes_)
   #
   # Define transformation rules via `map` and `match` methods
-  # and apply them by calling the plane:
+  # and apply them by calling the processor:
   #
-  #   class MyPlane < Rubanok::Plane
+  #   class MyTransformer < Rubanok::Processor
   #     map :type do
   #       raw.where(type: type)
   #     end
   #   end
   #
-  #   MyPlane.call(MyModel.all, {type: "public"})
+  #   MyTransformer.call(MyModel.all, {type: "public"})
   #
   # NOTE: the second argument (`params`) MUST be a Hash. Keys could be either Symbols
   # or Strings (we automatically transform strings to symbols while matching rules).
   #
   # All transformation methods are called within the context of the instance of
-  # a plane class.
+  # a processor class.
   #
   # You can access the input data via `raw` method.
-  class Plane
+  class Processor
     include DSL::Matching
     include DSL::Mapping
 
@@ -46,7 +46,7 @@ module Rubanok
         return @rules if instance_variable_defined?(:@rules)
 
         @rules =
-          if superclass <= Plane
+          if superclass <= Processor
             superclass.rules.dup
           else
             []
@@ -89,4 +89,6 @@ module Rubanok
       self.class.rules
     end
   end
+
+  Plane = Processor
 end

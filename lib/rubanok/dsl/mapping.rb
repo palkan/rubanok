@@ -2,7 +2,7 @@
 
 module Rubanok
   module DSL
-    # Adds `.map` method to Plane to define key-matching rules:
+    # Adds `.map` method to Processor to define key-matching rules:
     #
     #   map :q do |q:|
     #    # this rule is activated iff "q" (or :q) param is present

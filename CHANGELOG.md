@@ -2,6 +2,12 @@
 
 ## master
 
+- Improve naming by using "processor" instead of "plane". ([@palkan][])
+
+  See [the discussion](https://github.com/palkan/rubanok/issues/3).
+
+  **NOTE**: Older API is still available without deprecation.
+
 - Add `fail_when_no_matches` parameter to `match` method. ([@Earendil95][])
 
 ## 0.1.3 (2019-03-05)
