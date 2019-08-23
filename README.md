@@ -258,7 +258,7 @@ I put mine under `app/planes` (as `<resources>_plane.rb`) in my Rails app.
 
 - **I don't like the naming ("planes" ✈️?), can I still use the library?**
 
-Good news—the default naming has been changed. "Planes" are still available if you prefer them (just like me 😉).
+Good news—the default naming [has been changed](https://github.com/palkan/rubanok/pull/8). "Planes" are still available if you prefer them (just like me 😉).
 
 ## Contributing
 
