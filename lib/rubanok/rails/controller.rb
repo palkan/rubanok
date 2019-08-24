@@ -9,8 +9,10 @@ module Rubanok
     extend ActiveSupport::Concern
 
     included do
-      helper_method :rubanok_scope
-      helper_method :planish_scope
+      if respond_to?(:helper_method)
+        helper_method :rubanok_scope
+        helper_method :planish_scope
+      end
     end
 
     # This method process passed data (e.g. ActiveRecord relation) using

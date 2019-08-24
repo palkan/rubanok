@@ -2,6 +2,12 @@
 
 ## master
 
+## 0.2.1 (2019-08-24)
+
+- Fix bug with trying to add a helper for API controller. ([@palkan][])
+
+Fixes [#10](https://github.com/palkan/rubanok/issues/10).
+
 ## 0.2.0 (2019-08-23)
 
 - Add `Process.project` and `rubanok_scope` methods to get the Hash of recognized params. ([@palkan][])
