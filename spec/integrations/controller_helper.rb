@@ -11,6 +11,12 @@ ActiveSupport.on_load(:action_controller) do
   ActionController::Base.include Rubanok::Controller
 end
 
+ActiveSupport.on_load(:action_controller_api) do
+  require "rubanok/rails/controller"
+
+  ActionController::API.include Rubanok::Controller
+end
+
 SharedTestRoutes = ActionDispatch::Routing::RouteSet.new
 
 SharedTestRoutes.draw do

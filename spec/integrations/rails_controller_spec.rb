@@ -44,7 +44,7 @@ else
   end)
 end
 
-class PostsController < ActionController::Base
+module PostsControllerBehaviour
   FAKE_DATA = [
     {
       id: 12,
@@ -91,65 +91,95 @@ class PostsController < ActionController::Base
   end
 end
 
-describe PostsController do
+class PostsController < ActionController::Base
+  include PostsControllerBehaviour
+end
+
+if defined?(ActionController::API)
+  class PostsApiController < ActionController::API
+    include PostsControllerBehaviour
+
+    def implicit_rubanok_class
+      "#{controller_name.sub(/api/i, "").classify}Processor".safe_constantize
+    end
+
+    def implicit_plane_class
+      "#{controller_name.sub(/api/i, "").classify}Plane".safe_constantize
+    end
+  end
+end
+
+describe "Rails controllers integration" do
   include RSpec::Rails::ControllerExampleGroup
 
   routes { SharedTestRoutes }
 
-  describe "#planish" do
-    let(:data) { JSON.parse(response.body) }
+  shared_examples "rubanok controller" do
+    describe "#planish" do
+      let(:data) { JSON.parse(response.body) }
 
-    # ?? Rails 4.2 failes with ThreadError: already initialized
-    before do
-      @response.define_singleton_method(:recycle!) {}
+      # ?? Rails 4.2 failes with ThreadError: already initialized
+      before do
+        @response.define_singleton_method(:recycle!) {}
+      end
+
+      specify "implicit rubanok" do
+        get :implicit, {type: "sports"}.to_params
+
+        expect(data.size).to eq 2
+      end
+
+      specify "implicit rubanok with matching" do
+        get :implicit, {sort_by: "type", sort: "desc"}.to_params
+
+        expect(data.size).to eq 3
+        expect(data.first["type"]).to eq "lifestyle"
+      end
+
+      specify "implicit plane" do
+        get :implicit_plane, {type: "sports"}.to_params
+
+        expect(data.size).to eq 2
+      end
+
+      specify "explicit" do
+        get :explicit, {filter: {type: "sports"}}.to_params
+
+        expect(data.size).to eq 1
+        expect(data.first["id"]).to eq 25
+      end
+
+      specify "#rubanok_scope" do
+        get :scoped, {type: "sports", date: "2019-08-22", sort_by: "id", sort: "desc", one_more: "key"}.to_params
+
+        expect(data).to eq(
+          {
+            "type" => "sports",
+            "sort_by" => "id",
+            "sort" => "desc"
+          }
+        )
+      end
+
+      specify "#planish_scope" do
+        get :scoped_plane, {date: "2019-08-22", sort_by: "id", one_more: "key"}.to_params
+
+        expect(data).to eq(
+          {
+            "sort_by" => "id"
+          }
+        )
+      end
     end
+  end
 
-    specify "implicit rubanok" do
-      get :implicit, {type: "sports"}.to_params
+  describe PostsController do
+    include_examples "rubanok controller"
+  end
 
-      expect(data.size).to eq 2
-    end
-
-    specify "implicit rubanok with matching" do
-      get :implicit, {sort_by: "type", sort: "desc"}.to_params
-
-      expect(data.size).to eq 3
-      expect(data.first["type"]).to eq "lifestyle"
-    end
-
-    specify "implicit plane" do
-      get :implicit_plane, {type: "sports"}.to_params
-
-      expect(data.size).to eq 2
-    end
-
-    specify "explicit" do
-      get :explicit, {filter: {type: "sports"}}.to_params
-
-      expect(data.size).to eq 1
-      expect(data.first["id"]).to eq 25
-    end
-
-    specify "#rubanok_scope" do
-      get :scoped, {type: "sports", date: "2019-08-22", sort_by: "id", sort: "desc", one_more: "key"}.to_params
-
-      expect(data).to eq(
-        {
-          "type" => "sports",
-          "sort_by" => "id",
-          "sort" => "desc"
-        }
-      )
-    end
-
-    specify "#planish_scope" do
-      get :scoped_plane, {date: "2019-08-22", sort_by: "id", one_more: "key"}.to_params
-
-      expect(data).to eq(
-        {
-          "sort_by" => "id"
-        }
-      )
+  if defined?(PostsApiController)
+    describe PostsApiController do
+      include_examples "rubanok controller"
     end
   end
 end
