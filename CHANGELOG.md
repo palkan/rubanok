@@ -2,6 +2,8 @@
 
 ## master
 
+## 0.2.0 (2019-08-23)
+
 - Add `Process.project` and `rubanok_scope` methods to get the Hash of recognized params. ([@palkan][])
 
 ```ruby
