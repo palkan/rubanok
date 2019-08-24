@@ -83,7 +83,7 @@ module Rubanok
             define_method(clause.to_method_name, &clause.block)
           end
 
-          rules << rule
+          add_rule rule
         end
       end
 

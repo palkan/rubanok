@@ -152,6 +152,34 @@ If in example above you will call `CourseSessionsProcessor.call(CourseSession, f
 
 **NOTE:** Rubanok only matches exact values; more complex matching could be added in the future.
 
+### Getting the matching params
+
+Sometimes it could be useful to get the params that were used to process the data by Rubanok processor (e.g., you can use this data in views to display the actual filters state).
+
+In Rails, you can use the `#rubanok_scope` method for that:
+
+```ruby
+class CourseSessionController < ApplicationController
+  def index
+    @sessions = rubanok_process(CourseSession.all)
+    # Returns the Hash of params recognized by the CourseSessionProcessor.
+    # For example:
+    #
+    #    params == {q: "search", role_id: 2, date: "2019-08-22"}
+    #    @session_filter == {q: "search", role_id: 2}
+    @sessions_filter = rubanok_scope(
+      params.permit(:q, :role_id),
+      with: CourseSessionProcessor
+    )
+
+    # You can omit all the arguments
+    @sessions_filter = rubanok_scope #=> equals to rubanok_scope(params, with: implicit_rubanok_class)
+  end
+end
+```
+
+You can also accesss `rubanok_scope` in views (it's a helper method).
+
 ### Rule activation
 
 Rubanok _activates_ a rule by checking whether the corresponding keys are present in the params object. All the fields must be present to apply the rule.
