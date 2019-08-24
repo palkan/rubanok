@@ -12,6 +12,16 @@ class PostsPlane < Rubanok::Plane
   map :type do |type:|
     raw.select { |item| item[:type] == type }
   end
+
+  match :sort_by, :sort, activate_on: :sort_by do
+    having "type" do |sort: "asc"|
+      coef = sort == "asc" ? 1 : -1
+      raw.sort do |a, b|
+        next 0 if a[:type] == b[:type]
+        coef * (a[:type] == "sports" ? -1 : 1)
+      end
+    end
+  end
 end
 
 PostsProcessor = PostsPlane
@@ -71,6 +81,14 @@ class PostsController < ActionController::Base
     data = rubanok_process(FAKE_DATA)
     render json: data
   end
+
+  def scoped
+    render json: rubanok_scope(params.permit(:type, :sort, :sort_by, :date))
+  end
+
+  def scoped_plane
+    render json: planish_scope
+  end
 end
 
 describe PostsController do
@@ -92,6 +110,13 @@ describe PostsController do
       expect(data.size).to eq 2
     end
 
+    specify "implicit rubanok with matching" do
+      get :implicit, {sort_by: "type", sort: "desc"}.to_params
+
+      expect(data.size).to eq 3
+      expect(data.first["type"]).to eq "lifestyle"
+    end
+
     specify "implicit plane" do
       get :implicit_plane, {type: "sports"}.to_params
 
@@ -103,6 +128,28 @@ describe PostsController do
 
       expect(data.size).to eq 1
       expect(data.first["id"]).to eq 25
+    end
+
+    specify "#rubanok_scope" do
+      get :scoped, {type: "sports", date: "2019-08-22", sort_by: "id", sort: "desc", one_more: "key"}.to_params
+
+      expect(data).to eq(
+        {
+          "type" => "sports",
+          "sort_by" => "id",
+          "sort" => "desc"
+        }
+      )
+    end
+
+    specify "#planish_scope" do
+      get :scoped_plane, {date: "2019-08-22", sort_by: "id", one_more: "key"}.to_params
+
+      expect(data).to eq(
+        {
+          "sort_by" => "id"
+        }
+      )
     end
   end
 end

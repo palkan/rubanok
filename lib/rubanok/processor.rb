@@ -70,6 +70,7 @@ module Rubanok
       # Generates a `params` projection including only the keys used
       # by the rules
       def project(params)
+        params = params.symbolize_keys
         params.slice(*fields_set)
       end
     end
