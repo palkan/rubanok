@@ -7,9 +7,6 @@ require "rubanok/rule"
 require "rubanok/dsl/mapping"
 require "rubanok/dsl/matching"
 
-require "rubanok/ext/symbolize_keys"
-using Rubanok::SymbolizeKeys
-
 module Rubanok
   # Base class for processors (_planes_)
   #
@@ -77,7 +74,7 @@ module Rubanok
       # Generates a `params` projection including only the keys used
       # by the rules
       def project(params)
-        params = params.symbolize_keys
+        params = params.transform_keys(&:to_sym)
         params.slice(*fields_set)
       end
 
@@ -92,7 +89,7 @@ module Rubanok
     end
 
     def call(params)
-      params = params.symbolize_keys
+      params = params.transform_keys(&:to_sym)
 
       rules.each do |rule|
         next unless rule.applicable?(params)
