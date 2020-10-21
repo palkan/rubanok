@@ -1,34 +1,23 @@
 # frozen_string_literal: true
 
-ENV["RACK_ENV"] = "test"
-
-require "bundler/setup"
-
 begin
   require "pry-byebug"
 rescue LoadError
 end
 
-if ENV["CC_REPORT"]
-  require "simplecov"
-  SimpleCov.start do
-    add_filter "/spec/"
-  end
-end
+ENV["RAILS_ENV"] = "test"
 
 require "rubanok"
 
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
 
 RSpec.configure do |config|
-  config.example_status_persistence_file_path = ".rspec_status"
+  config.mock_with :rspec
 
-  config.filter_run focus: true
+  config.example_status_persistence_file_path = "tmp/rspec_examples.txt"
+  config.filter_run :focus
   config.run_all_when_everything_filtered = true
 
   config.order = :random
-
-  config.expect_with :rspec do |c|
-    c.syntax = :expect
-  end
+  Kernel.srand config.seed
 end
