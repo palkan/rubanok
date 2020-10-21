@@ -54,7 +54,9 @@ end
 Requirements:
 
 - Ruby ~> 2.5
-- Rails >= 5.2 (for Rails 4.2 use version 0.2.x)
+- (optional\*) Rails >= 5.2 (Rails 4.2 should work but we don't test against it anymore)
+
+\* This gem has no dependency on Rails.
 
 <a href="https://evilmartians.com/">
 <img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg" alt="Sponsored by Evil Martians" width="236" height="54"></a>
