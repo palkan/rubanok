@@ -2,15 +2,17 @@
 
 module Rubanok
   class Rule # :nodoc:
-    UNDEFINED = :__undef__
+    UNDEFINED = Object.new
 
-    attr_reader :fields, :activate_on, :activate_always, :ignore_empty_values
+    attr_reader :owner, :fields, :activate_on, :activate_always, :ignore_empty_values, :filter_with
 
-    def initialize(fields, activate_on: fields, activate_always: false, ignore_empty_values: Rubanok.ignore_empty_values)
+    def initialize(fields, activate_on: fields, activate_always: false, ignore_empty_values: Rubanok.ignore_empty_values, filter_with: nil)
+      @owner = owner
       @fields = fields.freeze
       @activate_on = Array(activate_on).freeze
       @activate_always = activate_always
       @ignore_empty_values = ignore_empty_values
+      @filter_with = filter_with
     end
 
     def project(params)
@@ -26,7 +28,7 @@ module Rubanok
     def applicable?(params)
       return true if activate_always == true
 
-      activate_on.all? { |field| params.key?(field) && !empty?(params[field]) }
+      activate_on.all? { |field| fetch_value(params, field) != UNDEFINED }
     end
 
     def to_method_name
@@ -40,9 +42,15 @@ module Rubanok
     end
 
     def fetch_value(params, field)
-      return UNDEFINED if !params.key?(field) || empty?(params[field])
+      return UNDEFINED unless params.key?(field)
 
-      params[field]
+      val = params[field]
+
+      val = filter_with.call(val) if filter_with
+
+      return UNDEFINED if empty?(val)
+
+      val
     end
 
     using(Module.new do

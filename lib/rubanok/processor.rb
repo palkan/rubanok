@@ -95,7 +95,7 @@ module Rubanok
         next unless rule.applicable?(params)
 
         prepare! unless prepared?
-        apply_rule! rule.to_method_name, rule.project(params)
+        apply_rule! rule, params
       end
 
       input
@@ -108,7 +108,11 @@ module Rubanok
     alias raw input
     alias prepared? prepared
 
-    def apply_rule!(method_name, data)
+    def apply_rule!(rule, params)
+      method_name, data = rule.to_method_name, rule.project(params)
+
+      return unless data
+
       self.input =
         if data.empty?
           send(method_name)
