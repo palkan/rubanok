@@ -26,24 +26,6 @@ end
 
 PostsProcessor = PostsPlane
 
-if ActionPack.version.release < Gem::Version.new("5")
-  using(Module.new do
-    refine Hash do
-      def to_params
-        self
-      end
-    end
-  end)
-else
-  using(Module.new do
-    refine Hash do
-      def to_params
-        {params: self}
-      end
-    end
-  end)
-end
-
 module PostsControllerBehaviour
   FAKE_DATA = [
     {
@@ -124,33 +106,33 @@ describe "Rails controllers integration" do
       end
 
       specify "implicit rubanok" do
-        get :implicit, {type: "sports"}.to_params
+        get :implicit, params: {type: "sports"}
 
         expect(data.size).to eq 2
       end
 
       specify "implicit rubanok with matching" do
-        get :implicit, {sort_by: "type", sort: "desc"}.to_params
+        get :implicit, params: {sort_by: "type", sort: "desc"}
 
         expect(data.size).to eq 3
         expect(data.first["type"]).to eq "lifestyle"
       end
 
       specify "implicit plane" do
-        get :implicit_plane, {type: "sports"}.to_params
+        get :implicit_plane, params: {type: "sports"}
 
         expect(data.size).to eq 2
       end
 
       specify "explicit" do
-        get :explicit, {filter: {type: "sports"}}.to_params
+        get :explicit, params: {filter: {type: "sports"}}
 
         expect(data.size).to eq 1
         expect(data.first["id"]).to eq 25
       end
 
       specify "#rubanok_scope" do
-        get :scoped, {type: "sports", date: "2019-08-22", sort_by: "id", sort: "desc", one_more: "key"}.to_params
+        get :scoped, params: {type: "sports", date: "2019-08-22", sort_by: "id", sort: "desc", one_more: "key"}
 
         expect(data).to eq(
           {
@@ -162,7 +144,7 @@ describe "Rails controllers integration" do
       end
 
       specify "#planish_scope" do
-        get :scoped_plane, {date: "2019-08-22", sort_by: "id", one_more: "key"}.to_params
+        get :scoped_plane, params: {date: "2019-08-22", sort_by: "id", one_more: "key"}
 
         expect(data).to eq(
           {
