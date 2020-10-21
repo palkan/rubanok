@@ -36,7 +36,14 @@ module Rubanok
     include DSL::Mapping
 
     class << self
-      def call(input, params)
+      def call(*args)
+        input, params =
+          if args.size == 1
+            [nil, args.first]
+          else
+            args
+          end
+
         new(input).call(params)
       end
 
@@ -73,6 +80,11 @@ module Rubanok
         params = params.symbolize_keys
         params.slice(*fields_set)
       end
+
+      # DSL to define the #prepare method
+      def prepare(&block)
+        define_method(:prepare, &block)
+      end
     end
 
     def initialize(input)
@@ -85,6 +97,7 @@ module Rubanok
       rules.each do |rule|
         next unless rule.applicable?(params)
 
+        prepare! unless prepared?
         apply_rule! rule.to_method_name, rule.project(params)
       end
 
@@ -93,9 +106,10 @@ module Rubanok
 
     private
 
-    attr_accessor :input
+    attr_accessor :input, :prepared
 
     alias raw input
+    alias prepared? prepared
 
     def apply_rule!(method_name, data)
       self.input =
@@ -104,6 +118,19 @@ module Rubanok
         else
           send(method_name, **data)
         end
+    end
+
+    def prepare
+      # no-op
+    end
+
+    def prepare!
+      @prepared = true
+
+      prepared_input = prepare
+      return unless prepared_input
+
+      self.input = prepared_input
     end
 
     def rules

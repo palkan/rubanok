@@ -2,6 +2,11 @@
 
 ## master
 
+- Add `prepare` DSL method to transform the input once before the first rule is activated. ([@palkan][])
+
+When no rules match, the method is not called.
+Useful when you want to perform some default transformations.
+
 ## 0.2.1 (2019-08-24)
 
 - Fix bug with trying to add a helper for API controller. ([@palkan][])

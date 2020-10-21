@@ -155,6 +155,41 @@ If in example above you will call `CourseSessionsProcessor.call(CourseSession, f
 
 **NOTE:** Rubanok only matches exact values; more complex matching could be added in the future.
 
+### Default transformation
+
+Sometimes it's useful to perform some transformations before **any** rule is activated.
+
+There is a special `prepare` method which allows you to define the default transformation:
+
+```ruby
+class CourseSearchQueryProcessor < Rubanok::Processor
+  prepare do
+    next if raw&.dig(:query, :bool)
+
+    {query: {bool: {filters: []}}}
+  end
+
+  map :ids do |ids:|
+    raw.dig(:query, :bool, :filters) << {terms: {id: ids}}
+    raw
+  end
+end
+```
+
+The block should return a new initial value for the _raw_ input or `nil` (no transformation required).
+
+The `prepare` callback is not executed if no params match, e.g.:
+
+```ruby
+CourseSearchQueryProcessor.call(nil, {}) #=> nil
+
+# But
+CourseSearchQueryProcessor.call(nil, {ids: [1]}) #=> {query {bool: {filters: [{terms: {ids: [1]}}]}}}
+
+# Note that we can omit the first argument altogether
+CourseSearchQueryProcessor.call({ids: [1]})
+```
+
 ### Getting the matching params
 
 Sometimes it could be useful to get the params that were used to process the data by Rubanok processor (e.g., you can use this data in views to display the actual filters state).
