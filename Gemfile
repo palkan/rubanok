@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in rubanok.gemspec
+gem "pry-byebug", platform: :mri
+
 gemspec
 
-gem "pry-byebug", platform: :mri
-gem "simplecov"
+eval_gemfile "gemfiles/rubocop.gemfile"
 
-local_gemfile = 'Gemfile.local'
+local_gemfile = "#{File.dirname(__FILE__)}/Gemfile.local"
 
 if File.exist?(local_gemfile)
   eval(File.read(local_gemfile)) # rubocop:disable Security/Eval

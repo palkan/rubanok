@@ -14,8 +14,8 @@ Fixes [#10](https://github.com/palkan/rubanok/issues/10).
 
 ```ruby
 class PostsProcessor < Rubanok::Processor
-  map :q { ... }
-  match :page, :per_page, activate_on: :page { ... }
+  map(:q) { block }
+  match(:page, :per_page, activate_on: :page) { block }
 end
 
 PostsProcessor.project(q: "search_me", filter: "smth", page: 2)

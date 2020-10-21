@@ -1,4 +1,5 @@
-[![Gem Version](https://badge.fury.io/rb/rubanok.svg)](https://rubygems.org/gems/rubanok) [![Build Status](https://travis-ci.org/palkan/rubanok.svg?branch=master)](https://travis-ci.org/palkan/rubanok)
+[![Gem Version](https://badge.fury.io/rb/rubanok.svg)](https://rubygems.org/gems/rubanok)
+![Build](https://github.com/palkan/rubanok/workflows/Build/badge.svg)
 
 # Rubanok
 
@@ -13,12 +14,12 @@ So, instead of:
 ```ruby
 class CourseSessionController < ApplicationController
   def index
-    @sessions = CourseSession.
-                  search(params[:q]).
-                  by_course_type(params[:course_type_id]).
-                  by_role(params[:role_id]).
-                  paginate(page_params).
-                  order(ordering_params)
+    @sessions = CourseSession
+      .search(params[:q])
+      .by_course_type(params[:course_type_id])
+      .by_role(params[:role_id])
+      .paginate(page_params)
+      .order(ordering_params)
   end
 end
 ```
@@ -53,7 +54,7 @@ end
 Requirements:
 
 - Ruby ~> 2.5
-- Rails >= 4.2 (only for using with Rails)
+- Rails >= 5.2 (for Rails 4.2 use version 0.2.x)
 
 <a href="https://evilmartians.com/">
 <img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg" alt="Sponsored by Evil Martians" width="236" height="54"></a>
@@ -106,8 +107,8 @@ There is also `match` method to handle values:
 
 ```ruby
 class CourseSessionsProcessor < Rubanok::Processor
-  SORT_ORDERS = %w(asc desc).freeze
-  SORTABLE_FIELDS = %w(id name created_at).freeze
+  SORT_ORDERS = %w[asc desc].freeze
+  SORTABLE_FIELDS = %w[id name created_at].freeze
 
   match :sort_by, :sort do
     having "course_id", "desc" do
@@ -209,7 +210,7 @@ One of the benefits of having modification logic contained in its own class is t
 ```ruby
 # For example, with RSpec
 RSpec.describe CourseSessionsProcessor do
-  let(:input ) { CourseSession.all }
+  let(:input) { CourseSession.all }
   let(:params) { {} }
 
   subject { described_class.call(input, params) }
@@ -229,8 +230,8 @@ RSpec.describe CourseSessionController do
   subject { get :index }
 
   specify do
-    expect { subject }.to have_rubanok_processed(CourseSession.all).
-      with(CourseSessionsProcessor)
+    expect { subject }.to have_rubanok_processed(CourseSession.all)
+      .with(CourseSessionsProcessor)
   end
 end
 ```
