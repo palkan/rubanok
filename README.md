@@ -238,7 +238,7 @@ end
 
 By default, Rubanok ignores empty param values (using `#empty?` under the hood) and will not run matching rules on those values. For example: `{ q: "" }` and `{ q: nil }` won't activate the `map :q` rule.
 
-You can change this behaviour by setting: `Rubanok.ignore_empty_values = false`.
+You can change this behaviour by specifying `ignore_empty_values: true` option for a particular rule or enabling this behaviour globally via `Rubanok.ignore_empty_values = true` (enabled by default).
 
 ### Testing
 

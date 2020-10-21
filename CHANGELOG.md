@@ -2,6 +2,8 @@
 
 ## master
 
+- Allow specifying `ignore_empty_values: *` per rule. ([@palkan][])
+
 - Add `prepare` DSL method to transform the input once before the first rule is activated. ([@palkan][])
 
 When no rules match, the method is not called.

@@ -154,6 +154,10 @@ describe "Plane.map" do
         map :type do |type:|
           raw.select { |item| item[:occupation] == type }
         end
+
+        map :raw_type, ignore_empty_values: false do |raw_type:|
+          raw.select { |item| item[:occupation] == raw_type }
+        end
       end
     end
 
@@ -173,6 +177,15 @@ describe "Plane.map" do
     specify "ignore_empty_values=false" do
       Rubanok.ignore_empty_values = false
       expect(subject).to eq([])
+    end
+
+    context "when defined for a rule" do
+      let(:params) { {raw_type: ""} }
+
+      specify do
+        Rubanok.ignore_empty_values = true
+        expect(subject).to eq([])
+      end
     end
   end
 end

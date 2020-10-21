@@ -4,12 +4,13 @@ module Rubanok
   class Rule # :nodoc:
     UNDEFINED = :__undef__
 
-    attr_reader :fields, :activate_on, :activate_always
+    attr_reader :fields, :activate_on, :activate_always, :ignore_empty_values
 
-    def initialize(fields, activate_on: fields, activate_always: false)
+    def initialize(fields, activate_on: fields, activate_always: false, ignore_empty_values: Rubanok.ignore_empty_values)
       @fields = fields.freeze
       @activate_on = Array(activate_on).freeze
       @activate_always = activate_always
+      @ignore_empty_values = ignore_empty_values
     end
 
     def project(params)
@@ -59,7 +60,7 @@ module Rubanok
     end)
 
     def empty?(val)
-      return false unless Rubanok.ignore_empty_values
+      return false unless ignore_empty_values
 
       val.empty?
     end
