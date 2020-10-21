@@ -2,6 +2,8 @@
 
 ## master
 
+- Add `filter_with: Symbol | Proc` option to `.map` to allowing filtering the input value. ([@palkan][])
+
 - Allow specifying `ignore_empty_values: *` per rule. ([@palkan][])
 
 - Add `prepare` DSL method to transform the input once before the first rule is activated. ([@palkan][])

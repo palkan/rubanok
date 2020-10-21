@@ -22,7 +22,18 @@ module Rubanok
 
       module ClassMethods
         def map(*fields, **options, &block)
-          rule = Rule.new(fields, options)
+          filter = options[:filter_with]
+
+          if filter.is_a?(Symbol)
+            respond_to?(filter) || raise(
+              ArgumentError,
+              "Unknown class method #{filter} for #{self}. " \
+              "Make sure that a filter method is defined before the call to .map."
+            )
+            options[:filter_with] = method(filter)
+          end
+
+          rule = Rule.new(fields, **options)
 
           define_method(rule.to_method_name, &block)
 

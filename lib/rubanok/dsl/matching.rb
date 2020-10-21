@@ -39,7 +39,7 @@ module Rubanok
 
         attr_reader :clauses
 
-        def initialize(*)
+        def initialize(*, **)
           super
           @clauses = []
         end
@@ -68,7 +68,7 @@ module Rubanok
 
       module ClassMethods
         def match(*fields, **options, &block)
-          rule = Rule.new(fields, options.slice(:activate_on, :activate_always))
+          rule = Rule.new(fields, **options.slice(:activate_on, :activate_always))
 
           rule.instance_eval(&block)
 
@@ -76,7 +76,7 @@ module Rubanok
             clause = rule.matching_clause(params)
             next default_match_handler(rule, params, options[:fail_when_no_matches]) unless clause
 
-            apply_rule! clause.to_method_name, clause.project(params)
+            apply_rule! clause, params
           end
 
           rule.clauses.each do |clause|

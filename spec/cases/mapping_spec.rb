@@ -4,16 +4,19 @@ describe "Plane.map" do
   let(:input) do
     [
       {
+        id: "1",
         name: "Kurt",
         age: "51",
         occupation: "guitar"
       },
       {
+        id: "2",
         name: "Kris",
         age: "53",
         occupation: "bas"
       },
       {
+        id: "",
         name: "Dave",
         age: "49",
         occupation: "drums"
@@ -186,6 +189,42 @@ describe "Plane.map" do
         Rubanok.ignore_empty_values = true
         expect(subject).to eq([])
       end
+    end
+  end
+
+  context "with filter_with" do
+    let(:plane) do
+      Class.new(Rubanok::Plane) do
+        def self.non_empty_array(val)
+          filtered = Array.wrap(val).reject(&:empty?)
+          return if filtered.empty?
+
+          filtered
+        end
+
+        map :ids, filter_with: :non_empty_array do |ids:|
+          raw.select { |item| ids.include?(item[:id]) }
+        end
+      end
+    end
+
+    specify "blank values" do
+      params[:ids] = ["", ""]
+
+      expect(subject.size).to eq 3
+    end
+
+    specify "only blank values" do
+      params[:ids] = ""
+
+      expect(subject.size).to eq 3
+    end
+
+    specify "with one non-blank value" do
+      params[:ids] = ["2", ""]
+
+      expect(subject.size).to eq 1
+      expect(subject.first[:name]).to eq "Kris"
     end
   end
 end

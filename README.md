@@ -240,6 +240,40 @@ By default, Rubanok ignores empty param values (using `#empty?` under the hood) 
 
 You can change this behaviour by specifying `ignore_empty_values: true` option for a particular rule or enabling this behaviour globally via `Rubanok.ignore_empty_values = true` (enabled by default).
 
+### Input values filtering
+
+For complex input types, such as arrays, it might be useful to _prepare_ the value before passing to a transforming block or prevent the activation altogether.
+
+We provide a `filter_with:` option for the `.map` method, which could be used as follows:
+
+```ruby
+class PostsProcessor < Rubanok::Processor
+  # We can pass a Proc
+  map :ids, filter_with: ->(vals) { vals.reject(&:blank?).presence } do |ids:|
+    raw.where(id: ids)
+  end
+
+  # or define a class method
+  def self.non_empty_array(val)
+    non_blank = val.reject(&:blank?)
+    return if non_blank.empty?
+
+    non_blank
+  end
+
+  # and pass its name as a filter_with value
+  map :ids, filter_with: :non_empty_array do |ids:|
+    raw.where(id: ids)
+  end
+end
+
+# Filtered values are used in rules
+PostsProcessor.call(Post.all, {ids: ["1", ""]}) == Post.where(id: ["1"])
+
+# When filter returns empty value, the rule is not applied
+PostsProcessor.call(Post.all, {ids: [nil, ""]}) == Post.all
+```
+
 ### Testing
 
 One of the benefits of having modification logic contained in its own class is the ability to test modifications in isolation:
