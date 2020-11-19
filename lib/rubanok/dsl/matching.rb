@@ -23,7 +23,7 @@ module Rubanok
           attr_reader :values, :id, :block
 
           def initialize(id, fields, values = [], **options, &block)
-            super(fields, options)
+            super(fields, **options)
             @id = id
             @block = block
             @values = Hash[fields.take(values.size).zip(values)].freeze
