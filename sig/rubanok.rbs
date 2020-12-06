@@ -1,0 +1,4 @@
+module Rubanok
+  attr_accessor ignore_empty_values: untyped
+  attr_accessor fail_when_no_matches: untyped
+end

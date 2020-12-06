@@ -1,0 +1,18 @@
+module Rubanok
+  module DSL
+    module Mapping
+      class Rule < Rubanok::Rule
+        METHOD_PREFIX: String
+
+        private
+        def build_method_name: () -> String
+      end
+
+      module ClassMethods
+        def map: (*untyped fields, **untyped options) { () -> untyped } -> untyped
+      end
+
+      def self.included: (untyped base) -> untyped
+    end
+  end
+end

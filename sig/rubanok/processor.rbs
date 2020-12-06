@@ -1,0 +1,30 @@
+module Rubanok
+  class Processor
+    include DSL::Matching
+    include DSL::Mapping
+
+    def self.call: (*untyped args) -> untyped
+    def self.add_rule: (untyped rule) -> untyped
+    def self.rules: () -> untyped
+    def self.fields_set: () -> untyped
+    def self.project: (untyped params) -> untyped
+    def self.prepare: () { () -> untyped } -> untyped
+
+    def initialize: (untyped input) -> untyped
+    def call: (untyped params) -> untyped
+
+    private
+    attr_accessor input: untyped
+    attr_accessor prepared: untyped
+
+    alias raw input
+    alias prepared? prepared
+
+    def apply_rule!: (untyped rule, untyped params) -> (nil | untyped)
+    def prepare: () -> nil
+    def prepare!: () -> (nil | untyped)
+    def rules: () -> untyped
+  end
+
+  Plane: untyped
+end

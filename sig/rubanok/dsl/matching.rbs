@@ -1,0 +1,42 @@
+module Rubanok
+  class UnexpectedInputError < StandardError
+  end
+
+  module DSL
+    module Matching
+      class Rule < Rubanok::Rule
+
+        METHOD_PREFIX: String
+
+        class Clause < Rubanok::Rule
+          attr_reader values: untyped
+          attr_reader id: untyped
+          attr_reader block: untyped
+
+          def initialize: (untyped id, untyped fields, ?untyped values, **untyped options) { () -> untyped } -> untyped
+          def applicable?: (untyped params) -> untyped
+
+          alias to_method_name id
+        end
+
+        attr_reader clauses: untyped
+
+        def initialize: () -> untyped
+        def matching_clause: (untyped params) -> untyped
+        def having: (*untyped values) { () -> untyped } -> untyped
+        def default: () { () -> untyped } -> untyped
+
+        private
+        def build_method_name: () -> String
+      end
+
+      module ClassMethods
+        def match: (*untyped fields, **untyped options) { () -> untyped } -> untyped
+      end
+
+      def self.included: (untyped base) -> untyped
+
+      def default_match_handler: (untyped rule, untyped params, untyped fail_when_no_matches) -> untyped
+    end
+  end
+end
