@@ -5,10 +5,13 @@ module Rubanok
   module DSL
     module Matching
       class Rule < Rubanok::Rule
-
         METHOD_PREFIX: String
+        @method_name: String
+        @fields: bot
 
         class Clause < Rubanok::Rule
+          @fields: untyped
+
           attr_reader values: untyped
           attr_reader id: untyped
           attr_reader block: untyped
@@ -19,10 +22,11 @@ module Rubanok
           alias to_method_name id
         end
 
-        attr_reader clauses: untyped
+        attr_reader clauses: Array[Clause]
 
         def initialize: () -> untyped
-        def matching_clause: (untyped params) -> untyped
+
+        def matching_clause: (Hash[bot, bot]) -> Clause?
         def having: (*untyped values) { () -> untyped } -> untyped
         def default: () { () -> untyped } -> untyped
 

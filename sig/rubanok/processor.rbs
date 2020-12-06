@@ -3,10 +3,12 @@ module Rubanok
     include DSL::Matching
     include DSL::Mapping
 
+    self.@rules: Array[bot]
+
     def self.call: (*untyped args) -> untyped
     def self.add_rule: (untyped rule) -> untyped
-    def self.rules: () -> untyped
-    def self.fields_set: () -> untyped
+    def self.rules: () -> Array[bot]
+    def self.fields_set: () -> Set[bot]
     def self.project: (untyped params) -> untyped
     def self.prepare: () { () -> untyped } -> untyped
 
@@ -23,7 +25,7 @@ module Rubanok
     def apply_rule!: (untyped rule, untyped params) -> (nil | untyped)
     def prepare: () -> nil
     def prepare!: () -> (nil | untyped)
-    def rules: () -> untyped
+    def rules: () -> Array[bot]
   end
 
   Plane: untyped
