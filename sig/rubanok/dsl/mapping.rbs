@@ -4,6 +4,9 @@ module Rubanok
       class Rule < Rubanok::Rule
         METHOD_PREFIX: String
 
+        @fields: bot
+        @method_name: String
+
         private
         def build_method_name: () -> String
       end
