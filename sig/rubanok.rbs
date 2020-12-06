@@ -1,4 +1,6 @@
 module Rubanok
-  attr_accessor ignore_empty_values: untyped
-  attr_accessor fail_when_no_matches: untyped
+  def self.fail_when_no_matches: () -> untyped
+  def self.fail_when_no_matches=: (untyped) -> untyped
+  def self.ignore_empty_values: () -> untyped
+  def self.ignore_empty_values=: (untyped) -> untyped
 end
