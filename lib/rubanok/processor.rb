@@ -75,7 +75,7 @@ module Rubanok
       # by the rules
       def project(params)
         params = params.transform_keys(&:to_sym)
-        params.slice(*fields_set)
+        params.slice(*fields_set.to_a)
       end
 
       # DSL to define the #prepare method
