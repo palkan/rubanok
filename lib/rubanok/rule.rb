@@ -1,6 +1,20 @@
 # frozen_string_literal: true
 
 module Rubanok
+  using(Module.new do
+    refine NilClass do
+      def empty?
+        true
+      end
+    end
+
+    refine Object do
+      def empty?
+        false
+      end
+    end
+  end)
+
   class Rule # :nodoc:
     UNDEFINED = Object.new
 
@@ -51,20 +65,6 @@ module Rubanok
 
       val
     end
-
-    using(Module.new do
-      refine NilClass do
-        def empty?
-          true
-        end
-      end
-
-      refine Object do
-        def empty?
-          false
-        end
-      end
-    end)
 
     def empty?(val)
       return false unless ignore_empty_values
