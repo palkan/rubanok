@@ -73,6 +73,8 @@ module Rubanok
           rule.instance_eval(&block)
 
           define_method(rule.to_method_name) do |params = {}|
+            params ||= {} if params.nil?
+
             clause = rule.matching_clause(params)
 
             if clause

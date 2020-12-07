@@ -24,7 +24,7 @@ module Rubanok
 
         attr_reader clauses: Array[Clause]
 
-        def matching_clause: (params) -> Clause?
+        def matching_clause: (hash params) -> Clause?
         def having: (*untyped values) { () -> input } -> void
         def default: () { () -> input } -> void
 
@@ -33,12 +33,12 @@ module Rubanok
       end
 
       module ClassMethods : Module, _RulesAdding, Matching
-        def match: (*field fields, ?activate_on: field | Array[field], ?activate_always: bool, ?fail_when_no_matches: bool?) { () -> void } -> void
+        def match: (*field fields, ?activate_on: field | Array[field], ?activate_always: bool, ?fail_when_no_matches: bool?) { (Rule) -> void } -> void
       end
 
       def self.included: (singleton(Processor) base) -> void
 
-      def default_match_handler: (Rule rule, params, bool? fail_when_no_matches) -> void
+      def default_match_handler: (Rule rule, hash params, bool? fail_when_no_matches) -> void
     end
   end
 end
