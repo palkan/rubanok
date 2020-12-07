@@ -12,12 +12,14 @@ module Rubanok
     include DSL::Mapping
     extend DSL::Mapping::ClassMethods
 
+    UNDEFINED: Object
+
     self.@rules: Array[Rule]
 
     def self.superclass: () -> singleton(Processor)
 
-    def self.call: (params) -> input
-                 | (input, params) -> input
+    def self.call: (input, params) -> input
+                 | (params) -> input
     def self.add_rule: (Rule rule) -> void
     def self.rules: () -> Array[Rule]
     def self.fields_set: () -> Set[field]
