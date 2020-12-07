@@ -5,12 +5,18 @@ module Rubanok
   # Transformation target (we assume that input and output types are the same)
   type input = Object?
 
+  interface _RulesAdding
+    def add_rule: (Rule rule) -> void
+  end
+
   class Processor
     include DSL::Matching
     extend DSL::Matching::ClassMethods
 
     include DSL::Mapping
     extend DSL::Mapping::ClassMethods
+
+    extend _RulesAdding
 
     UNDEFINED: Object
 
@@ -20,7 +26,6 @@ module Rubanok
 
     def self.call: (input, params) -> input
                  | (params) -> input
-    def self.add_rule: (Rule rule) -> void
     def self.rules: () -> Array[Rule]
     def self.fields_set: () -> Set[field]
     def self.project: (params) -> params

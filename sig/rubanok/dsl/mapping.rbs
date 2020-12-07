@@ -1,6 +1,6 @@
 module Rubanok
   module DSL
-    module Mapping
+    module Mapping : Processor
       class Rule < Rubanok::Rule
         METHOD_PREFIX: String
 
@@ -8,7 +8,7 @@ module Rubanok
         def build_method_name: () -> String
       end
 
-      module ClassMethods
+      module ClassMethods : Module, _RulesAdding
         def map: (*field fields, ?activate_on: (field | Array[field]), ?activate_always: bool, ?ignore_empty_values: bool, ?filter_with: Method?) { () -> input } -> void
       end
 
