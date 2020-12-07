@@ -1,24 +1,23 @@
 module Rubanok
   class Rule
-    UNDEFINED: untyped
+    UNDEFINED: Object
 
     @method_name: String
 
-    attr_reader owner: untyped
-    attr_reader fields: untyped
-    attr_reader activate_on: untyped
-    attr_reader activate_always: untyped
-    attr_reader ignore_empty_values: untyped
-    attr_reader filter_with: untyped
+    attr_reader fields: Array[field]
+    attr_reader activate_on: Array[field]
+    attr_reader activate_always: bool
+    attr_reader ignore_empty_values: bool
+    attr_reader filter_with: Method?
 
-    def initialize: (untyped fields, ?activate_on: untyped activate_on, ?activate_always: bool activate_always, ?ignore_empty_values: untyped ignore_empty_values, ?filter_with: untyped? filter_with) -> untyped
-    def project: (untyped params) -> untyped
-    def applicable?: (untyped params) -> (TrueClass | untyped)
+    def initialize: (Array[field] fields, ?activate_on: field | Array[field] activate_on, ?activate_always: bool activate_always, ?ignore_empty_values: bool ignore_empty_values, ?filter_with: Method? filter_with) -> void
+    def project: (params) -> params
+    def applicable?: (params) -> bool
     def to_method_name: () -> String
 
     private
     def build_method_name: () -> String
-    def fetch_value: (untyped, untyped) -> Object
+    def fetch_value: (params, field) -> Object
     def empty? : (untyped) -> false
                | -> false
                | -> true
