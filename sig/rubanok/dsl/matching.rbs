@@ -12,19 +12,17 @@ module Rubanok
         class Clause < Rubanok::Rule
           @fields: Array[field]
 
-          attr_reader values: Array[untyped]
+          attr_reader values: params
           attr_reader id: String
           attr_reader block: ^() -> input
 
-          def initialize: (String id, Array[field] fields, ?untyped values, ?activate_on: field | Array[field] activate_on, ?activate_always: bool activate_always) { () -> input } -> void
+          def initialize: (String id, Array[field] fields, untyped values, ?activate_on: field | Array[field], ?activate_always: bool) { () -> input } -> void
           def applicable?: (params) -> bool
 
           alias to_method_name id
         end
 
         attr_reader clauses: Array[Clause]
-
-        def initialize: () -> void
 
         def matching_clause: (params) -> Clause?
         def having: (*untyped values) { () -> input } -> void
@@ -35,7 +33,7 @@ module Rubanok
       end
 
       module ClassMethods
-        def match: (*field fields, ?activate_on: field | Array[field] activate_on, ?activate_always: bool activate_always) { () -> void } -> void
+        def match: (*field fields, ?activate_on: field | Array[field], ?activate_always: bool, ?fail_when_no_matches: bool?) { () -> void } -> void
       end
 
       def self.included: (singleton(Processor) base) -> void

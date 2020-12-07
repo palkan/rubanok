@@ -22,8 +22,8 @@ module Rubanok
         class Clause < Rubanok::Rule
           attr_reader :values, :id, :block
 
-          def initialize(id, fields, values = [], **options, &block)
-            super(fields, **options)
+          def initialize(id, fields, values, activate_on: fields, activate_always: false, &block)
+            super(fields, activate_on: activate_on, activate_always: activate_always)
             @id = id
             @block = block
             @values = Hash[fields.take(values.size).zip(values)].freeze
@@ -39,7 +39,7 @@ module Rubanok
 
         attr_reader :clauses
 
-        def initialize(*, **)
+        def initialize(fields, activate_on: fields, activate_always: false, ignore_empty_values: Rubanok.ignore_empty_values, filter_with: nil)
           super
           @clauses = []
         end
@@ -55,7 +55,7 @@ module Rubanok
         end
 
         def default(&block)
-          clauses << Clause.new("#{to_method_name}_default", fields, activate_always: true, &block)
+          clauses << Clause.new("#{to_method_name}_default", fields, [], activate_always: true, &block)
         end
 
         private
@@ -67,8 +67,8 @@ module Rubanok
       end
 
       module ClassMethods
-        def match(*fields, **options, &block)
-          rule = Rule.new(fields, **options.slice(:activate_on, :activate_always))
+        def match(*fields, activate_on: fields, activate_always: false, fail_when_no_matches: nil, &block)
+          rule = Rule.new(fields, activate_on: activate_on, activate_always: activate_always)
 
           rule.instance_eval(&block)
 
@@ -78,7 +78,7 @@ module Rubanok
             if clause
               apply_rule! clause, params
             else
-              default_match_handler(rule, params, options[:fail_when_no_matches])
+              default_match_handler(rule, params, fail_when_no_matches)
             end
           end
 
