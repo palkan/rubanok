@@ -10,7 +10,13 @@ module Rubanok
     attr_reader ignore_empty_values: bool
     attr_reader filter_with: Method?
 
-    def initialize: (Array[field] fields, ?activate_on: field | Array[field], ?activate_always: bool, ?ignore_empty_values: bool, ?filter_with: Method?) -> void
+    %a{rbs:test:skip} def initialize: (
+      Array[field] fields,
+      ?activate_on: field | Array[field],
+      ?activate_always: bool,
+      ?ignore_empty_values: bool,
+      ?filter_with: Method?
+    ) -> void
     def project: (params) -> params
     def applicable?: (params) -> bool
     def to_method_name: () -> String

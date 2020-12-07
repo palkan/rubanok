@@ -8,7 +8,8 @@ gemspec
 
 eval_gemfile "gemfiles/rubocop.gemfile"
 
-gem "steep", platform: :mri
+# Steep requires rbs `~> 0.17.0`, we neeed `>= 0.21`
+gem "steep", platform: :mri unless ENV["RBS_TEST_TARGET"]
 
 local_gemfile = "#{File.dirname(__FILE__)}/Gemfile.local"
 
