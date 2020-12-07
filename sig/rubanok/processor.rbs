@@ -27,8 +27,9 @@ module Rubanok
     def initialize: (input) -> void
     def call: (params) -> input
 
-    private
     attr_accessor input: input
+
+    private
     attr_accessor prepared: bool
 
     alias raw input
