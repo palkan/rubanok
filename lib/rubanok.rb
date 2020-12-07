@@ -5,6 +5,7 @@ require "rubanok/processor"
 
 require "rubanok/railtie" if defined?(Rails)
 
+# @type const ENV: Hash[String, String]
 if defined?(RSpec) && (ENV["RACK_ENV"] == "test" || ENV["RAILS_ENV"] == "test")
   require "rubanok/rspec"
 end

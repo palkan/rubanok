@@ -22,7 +22,9 @@ module Rubanok
 
     def initialize(fields, activate_on: fields, activate_always: false, ignore_empty_values: Rubanok.ignore_empty_values, filter_with: nil)
       @fields = fields.freeze
-      @activate_on = Array(activate_on).freeze
+      # @type var activate_on: Array[Symbol]
+      activate_on = Array(activate_on)
+      @activate_on = activate_on.freeze
       @activate_always = activate_always
       @ignore_empty_values = ignore_empty_values
       @filter_with = filter_with
@@ -57,7 +59,7 @@ module Rubanok
 
       val = params[field]
 
-      val = filter_with.call(val) if filter_with
+      val = filter_with&.call(val) if filter_with
 
       return UNDEFINED if empty?(val)
 

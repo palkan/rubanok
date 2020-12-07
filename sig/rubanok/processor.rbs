@@ -1,6 +1,8 @@
 module Rubanok
   # Transformation parameters
   type params = Hash[Symbol | String, untyped]
+  # Untyped Hash
+  type hash =  Hash[untyped, untyped]
   type field = Symbol
   # Transformation target (we assume that input and output types are the same)
   type input = Object?
