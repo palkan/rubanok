@@ -215,7 +215,7 @@ describe "Plane.match" do
           end
 
           default do |sort_by:, sort: "asc"|
-            return [] unless valid_sort_field?(sort_by)
+            next [] unless valid_sort_field?(sort_by)
 
             sign = sort == "asc" ? 1 : -1
 

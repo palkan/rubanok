@@ -86,6 +86,7 @@ module Rubanok
 
     def initialize(input)
       @input = input
+      @prepared = false
     end
 
     def call(params)

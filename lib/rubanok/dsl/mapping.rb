@@ -30,10 +30,10 @@ module Rubanok
               "Unknown class method #{filter} for #{self}. " \
               "Make sure that a filter method is defined before the call to .map."
             )
-            filter_with = method(filter)
+            filter = method(filter)
           end
 
-          rule = Rule.new(fields, activate_on: activate_on, activate_always: activate_always, ignore_empty_values: ignore_empty_values, filter_with: filter_with)
+          rule = Rule.new(fields, activate_on: activate_on, activate_always: activate_always, ignore_empty_values: ignore_empty_values, filter_with: filter)
 
           define_method(rule.to_method_name, &block)
 
