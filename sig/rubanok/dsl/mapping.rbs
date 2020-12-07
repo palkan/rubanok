@@ -9,7 +9,7 @@ module Rubanok
       end
 
       module ClassMethods
-        def map: (*field fields, ?activate_on: (field | Array[field]) activate_on, ?activate_always: bool activate_always, ?ignore_empty_values: bool ignore_empty_values, ?filter_with: Method? filter_with) { () -> input } -> void
+        def map: (*field fields, ?activate_on: (field | Array[field]), ?activate_always: bool, ?ignore_empty_values: bool, ?filter_with: Method?) { () -> input } -> void
       end
 
       def self.included: (singleton(Processor) base) -> void

@@ -21,8 +21,8 @@ module Rubanok
       end
 
       module ClassMethods
-        def map(*fields, **options, &block)
-          filter = options[:filter_with]
+        def map(*fields, activate_on: fields, activate_always: false, ignore_empty_values: Rubanok.ignore_empty_values, filter_with: nil, &block)
+          filter = filter_with
 
           if filter.is_a?(Symbol)
             respond_to?(filter) || raise(
@@ -30,10 +30,10 @@ module Rubanok
               "Unknown class method #{filter} for #{self}. " \
               "Make sure that a filter method is defined before the call to .map."
             )
-            options[:filter_with] = method(filter)
+            filter_with = method(filter)
           end
 
-          rule = Rule.new(fields, **options)
+          rule = Rule.new(fields, activate_on: activate_on, activate_always: activate_always, ignore_empty_values: ignore_empty_values, filter_with: filter_with)
 
           define_method(rule.to_method_name, &block)
 
