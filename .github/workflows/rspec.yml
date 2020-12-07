@@ -42,6 +42,12 @@ jobs:
         bundle config --global gemfile ${{ matrix.gemfile }}
         bundle install
         bundle update
-    - name: Run RSpec
+    - name: Run RSpec with RBS
+      if: matrix.ruby == '2.7'
       run: |
-        bundle exec rspec
+        gem install rbs
+        RBS_TEST_TARGET="Rubanok::*" RUBYOPT="-rrbs/test/setup" bundle exec rspec --force-color
+    - name: Run RSpec without RBS
+      if: matrix.ruby != '2.7'
+      run: |
+        bundle exec rspec --force-color

@@ -19,3 +19,14 @@ jobs:
         gem install bundler
         bundle install --gemfile gemfiles/rubocop.gemfile --jobs 4 --retry 3
         bundle exec --gemfile gemfiles/rubocop.gemfile rubocop
+  steep:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7
+    - name: Run Steep check
+      run: |
+        gem install steep
+        steep check
