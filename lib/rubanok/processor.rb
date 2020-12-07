@@ -32,15 +32,15 @@ module Rubanok
     include DSL::Matching
     include DSL::Mapping
 
-    class << self
-      def call(*args)
-        input, params =
-          if args.size == 1
-            [nil, args.first]
-          else
-            args
-          end
+    UNDEFINED = Object.new
 
+    class << self
+      def call(input, params = UNDEFINED)
+        input, params = nil, input if params == UNDEFINED
+
+        raise ArgumentError, "Params could not be nil" if params.nil?
+
+        # @type var params: untyped
         new(input).call(params)
       end
 
