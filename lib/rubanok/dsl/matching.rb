@@ -74,9 +74,12 @@ module Rubanok
 
           define_method(rule.to_method_name) do |params = {}|
             clause = rule.matching_clause(params)
-            next default_match_handler(rule, params, options[:fail_when_no_matches]) unless clause
 
-            apply_rule! clause, params
+            if clause
+              apply_rule! clause, params
+            else
+              default_match_handler(rule, params, options[:fail_when_no_matches])
+            end
           end
 
           rule.clauses.each do |clause|
