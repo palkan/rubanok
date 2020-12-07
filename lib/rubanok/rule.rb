@@ -31,9 +31,7 @@ module Rubanok
     def project(params)
       fields.each_with_object({}) do |field, acc|
         val = fetch_value params, field
-        next acc if val == UNDEFINED
-
-        acc[field] = val
+        acc[field] = val if val != UNDEFINED
         acc
       end
     end
