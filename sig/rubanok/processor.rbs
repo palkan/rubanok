@@ -14,6 +14,8 @@ module Rubanok
 
     self.@rules: Array[Rule]
 
+    def self.superclass: () -> singleton(Processor)
+
     def self.call: (params) -> input
                  | (input, params) -> input
     def self.add_rule: (Rule rule) -> void
