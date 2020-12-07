@@ -1,32 +1,42 @@
 module Rubanok
+  # Transformation parameters
+  type params = Hash[Symbol | String, untyped]
+  type field = Symbol
+  # Transformation target (we assume that input and output types are the same)
+  type input = Object?
+
   class Processor
     include DSL::Matching
+    extend DSL::Matching::ClassMethods
+
     include DSL::Mapping
+    extend DSL::Mapping::ClassMethods
 
-    self.@rules: Array[bot]
+    self.@rules: Array[Rule]
 
-    def self.call: (*untyped args) -> untyped
-    def self.add_rule: (untyped rule) -> untyped
-    def self.rules: () -> Array[bot]
-    def self.fields_set: () -> Set[bot]
-    def self.project: (untyped params) -> untyped
-    def self.prepare: () { () -> untyped } -> untyped
+    def self.call: (params) -> input
+                 | (input, params) -> input
+    def self.add_rule: (Rule rule) -> void
+    def self.rules: () -> Array[Rule]
+    def self.fields_set: () -> Set[field]
+    def self.project: (params) -> params
+    def self.prepare: () { () -> input } -> void
 
-    def initialize: (untyped input) -> untyped
-    def call: (untyped params) -> untyped
+    def initialize: (input) -> void
+    def call: (params) -> input
 
     private
-    attr_accessor input: untyped
-    attr_accessor prepared: untyped
+    attr_accessor input: input
+    attr_accessor prepared: bool
 
     alias raw input
     alias prepared? prepared
 
-    def apply_rule!: (untyped rule, untyped params) -> (nil | untyped)
-    def prepare: () -> nil
-    def prepare!: () -> (nil | untyped)
-    def rules: () -> Array[bot]
+    def apply_rule!: (Rule rule, params) -> void
+    def prepare: () -> input
+    def prepare!: () -> void
+    def rules: () -> Array[Rule]
   end
 
-  Plane: untyped
+  Plane: singleton(Processor)
 end

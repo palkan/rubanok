@@ -4,10 +4,9 @@ module Rubanok
   class Rule # :nodoc:
     UNDEFINED = Object.new
 
-    attr_reader :owner, :fields, :activate_on, :activate_always, :ignore_empty_values, :filter_with
+    attr_reader :fields, :activate_on, :activate_always, :ignore_empty_values, :filter_with
 
     def initialize(fields, activate_on: fields, activate_always: false, ignore_empty_values: Rubanok.ignore_empty_values, filter_with: nil)
-      @owner = owner
       @fields = fields.freeze
       @activate_on = Array(activate_on).freeze
       @activate_always = activate_always

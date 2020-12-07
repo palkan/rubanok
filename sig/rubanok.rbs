@@ -1,6 +1,6 @@
 module Rubanok
-  def self.fail_when_no_matches: () -> untyped
-  def self.fail_when_no_matches=: (untyped) -> untyped
-  def self.ignore_empty_values: () -> untyped
-  def self.ignore_empty_values=: (untyped) -> untyped
+  def self.fail_when_no_matches: () -> bool
+  def self.fail_when_no_matches=: (bool) -> bool
+  def self.ignore_empty_values: () -> bool
+  def self.ignore_empty_values=: (bool) -> bool
 end

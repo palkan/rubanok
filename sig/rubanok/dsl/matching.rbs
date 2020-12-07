@@ -7,40 +7,40 @@ module Rubanok
       class Rule < Rubanok::Rule
         METHOD_PREFIX: String
         @method_name: String
-        @fields: bot
+        @fields: Array[field]
 
         class Clause < Rubanok::Rule
-          @fields: untyped
+          @fields: Array[field]
 
-          attr_reader values: untyped
-          attr_reader id: untyped
-          attr_reader block: untyped
+          attr_reader values: Array[untyped]
+          attr_reader id: String
+          attr_reader block: ^() -> input
 
-          def initialize: (untyped id, untyped fields, ?untyped values, **untyped options) { () -> untyped } -> untyped
-          def applicable?: (untyped params) -> untyped
+          def initialize: (String id, Array[field] fields, ?untyped values, ?activate_on: field | Array[field] activate_on, ?activate_always: bool activate_always) { () -> input } -> void
+          def applicable?: (params) -> bool
 
           alias to_method_name id
         end
 
         attr_reader clauses: Array[Clause]
 
-        def initialize: () -> untyped
+        def initialize: () -> void
 
-        def matching_clause: (Hash[bot, bot]) -> Clause?
-        def having: (*untyped values) { () -> untyped } -> untyped
-        def default: () { () -> untyped } -> untyped
+        def matching_clause: (params) -> Clause?
+        def having: (*untyped values) { () -> input } -> void
+        def default: () { () -> input } -> void
 
         private
         def build_method_name: () -> String
       end
 
       module ClassMethods
-        def match: (*untyped fields, **untyped options) { () -> untyped } -> untyped
+        def match: (*field fields, ?activate_on: field | Array[field] activate_on, ?activate_always: bool activate_always) { () -> void } -> void
       end
 
-      def self.included: (untyped base) -> untyped
+      def self.included: (singleton(Processor) base) -> void
 
-      def default_match_handler: (untyped rule, untyped params, untyped fail_when_no_matches) -> untyped
+      def default_match_handler: (Rule rule, params, bool? fail_when_no_matches) -> void
     end
   end
 end

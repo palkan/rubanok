@@ -4,18 +4,15 @@ module Rubanok
       class Rule < Rubanok::Rule
         METHOD_PREFIX: String
 
-        @fields: bot
-        @method_name: String
-
         private
         def build_method_name: () -> String
       end
 
       module ClassMethods
-        def map: (*untyped fields, **untyped options) { () -> untyped } -> untyped
+        def map: (*field fields, ?activate_on: (field | Array[field]) activate_on, ?activate_always: bool activate_always, ?ignore_empty_values: bool ignore_empty_values, ?filter_with: Method? filter_with) { () -> input } -> void
       end
 
-      def self.included: (untyped base) -> untyped
+      def self.included: (singleton(Processor) base) -> void
     end
   end
 end
