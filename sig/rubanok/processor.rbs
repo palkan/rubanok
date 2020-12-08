@@ -23,6 +23,7 @@ module Rubanok
     UNDEFINED: Object
 
     self.@rules: Array[Rule]
+    self.@fields_set: Set[field]
 
     def self.superclass: () -> singleton(Processor)
 
