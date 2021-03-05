@@ -350,6 +350,42 @@ end
 
 **NOTE:** the `planish` method is still available and it uses `#{controller_path.classify.pluralize}Plane".safe_constantize` under the hood (via the `#implicit_plane_class` method).
 
+## Using with RBS/Steep
+
+_Read ["Climbing Steep hills, or adopting Ruby 3 types with RBS"](https://evilmartians.com/chronicles/climbing-steep-hills-or-adopting-ruby-types) for the context._
+
+Rubanok comes with Ruby type signatures (RBS).
+
+To use them with Steep, add `library "rubanok"` to your Steepfile.
+
+Since Rubanok provides DSL with implicit context switching (via `instance_eval`), you need to provide type hints for the type checker to help it
+figure out the current context. Here is an example:
+
+```ruby
+class MyProcessor < Rubanok::Processor
+  map :q do |q:|
+    # @type self : Rubanok::Processor
+    raw
+  end
+
+  match :sort_by, :sort, activate_on: :sort_by do
+    # @type self : Rubanok::DSL::Matching::Rule
+    having "status", "asc" do
+      # @type self : Rubanok::Processor
+      raw
+    end
+
+    # @type self : Rubanok::DSL::Matching::Rule
+    default do |sort_by:, sort: "asc"|
+      # @type self : Rubanok::Processor
+      raw
+    end
+  end
+end
+```
+
+Yeah, a lot of annotations 😞 Welcome to the type-safe world!
+
 ## Questions & Answers
 
 - **Where to put my processor/plane classes?**
