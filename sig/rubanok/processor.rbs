@@ -12,10 +12,8 @@ module Rubanok
   end
 
   class Processor
-    include DSL::Matching
     extend DSL::Matching::ClassMethods
 
-    include DSL::Mapping
     extend DSL::Mapping::ClassMethods
 
     extend _RulesAdding

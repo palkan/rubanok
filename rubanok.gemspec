@@ -14,7 +14,8 @@ Gem::Specification.new do |spec|
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.5.0"
 
-  spec.files = Dir.glob("lib/**/*") + %w[README.md LICENSE.txt CHANGELOG.md]
+  spec.files = Dir.glob("lib/**/*") + %w[README.md LICENSE.txt CHANGELOG.md] +
+    Dir.glob("sig/**/*")
 
   spec.metadata = {
     "bug_tracker_uri" => "http://github.com/palkan/rubanok/issues",
