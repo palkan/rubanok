@@ -2,6 +2,10 @@
 
 ## master
 
+## 0.4.0 (2021-03-05)
+
+- Ruby 3.0 compatibility. ([@palkan][])
+
 - Add RBS. ([@palkan][])
 
 ## 0.3.0 (2020-10-21)
