@@ -2,6 +2,8 @@
 
 ## master
 
+- Add RBS. ([@palkan][])
+
 ## 0.3.0 (2020-10-21)
 
 - Add `filter_with: Symbol | Proc` option to `.map` to allowing filtering the input value. ([@palkan][])

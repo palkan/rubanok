@@ -23,8 +23,10 @@ jobs:
           gemfile: "gemfiles/rails5.gemfile"
         - ruby: "2.6"
           gemfile: "gemfiles/rails5.gemfile"
-        - ruby: "2.7"
-          gemfile: "gemfiles/railsmaster.gemfile"
+        # - ruby: "2.7"
+        #   gemfile: "gemfiles/railsmaster.gemfile"
+        - ruby: "3.0"
+          gemfile: "gemfiles/rails6.gemfile"
     steps:
     - uses: actions/checkout@v2
     - uses: actions/cache@v1
@@ -43,11 +45,11 @@ jobs:
         bundle install
         bundle update
     - name: Run RSpec with RBS
-      if: matrix.ruby == '2.7'
+      if: matrix.ruby == '3.0'
       run: |
-        gem install rbs
+        gem install racc rbs
         RBS_TEST_TARGET="Rubanok::*" RUBYOPT="-rrbs/test/setup" bundle exec rspec --force-color
     - name: Run RSpec without RBS
-      if: matrix.ruby != '2.7'
+      if: matrix.ruby != '3.0'
       run: |
         bundle exec rspec --force-color
