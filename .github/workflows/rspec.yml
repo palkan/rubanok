@@ -16,40 +16,29 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: ["2.7"]
-        gemfile: ["gemfiles/rails6.gemfile"]
+        ruby: ["3.2"]
+        gemfile: ["gemfiles/rails7.gemfile"]
+        rbs: ["true"]
         include:
-        - ruby: "2.5"
-          gemfile: "gemfiles/rails5.gemfile"
-        - ruby: "2.6"
-          gemfile: "gemfiles/rails5.gemfile"
-        # - ruby: "2.7"
-        #   gemfile: "gemfiles/railsmaster.gemfile"
-        - ruby: "3.0"
+        - ruby: "2.7"
           gemfile: "gemfiles/rails6.gemfile"
+          rbs: "false"
+        - ruby: "3.0"
+          gemfile: "gemfiles/rails70.gemfile"
+          rbs: "false"
+        - ruby: "3.2"
+          gemfile: "gemfiles/railsmaster.gemfile"
+          rbs: "false"
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v1
-      with:
-        path: /home/runner/bundle
-        key: bundle-${{ matrix.ruby }}-${{ matrix.gemfile }}-${{ hashFiles(matrix.gemfile) }}-${{ hashFiles('**/*.gemspec') }}
-        restore-keys: |
-          bundle-${{ matrix.ruby }}-${{ matrix.gemfile }}-
+    - uses: actions/checkout@v3
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
-    - name: Bundle install
+        bundler-cache: true
+    - name: Run RSpec
       run: |
-        bundle config path /home/runner/bundle
-        bundle config --global gemfile ${{ matrix.gemfile }}
-        bundle install
-        bundle update
+        bundle exec rspec
     - name: Run RSpec with RBS
-      if: matrix.ruby == '3.0'
+      if: matrix.rbs == 'rbs'
       run: |
-        gem install racc rbs
-        RBS_TEST_TARGET="Rubanok::*" RUBYOPT="-rrbs/test/setup" bundle exec rspec --force-color
-    - name: Run RSpec without RBS
-      if: matrix.ruby != '3.0'
-      run: |
-        bundle exec rspec --force-color
+        bundle exec rake spec:rbs -- --force-color
