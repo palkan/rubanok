@@ -53,8 +53,8 @@ end
 
 Requirements:
 
-- Ruby ~> 2.5
-- (optional\*) Rails >= 5.2 (Rails 4.2 should work but we don't test against it anymore)
+- Ruby ~> 2.7
+- (optional\*) Rails >= 6.0 (see older releases for Rails <6 support)
 
 \* This gem has no dependency on Rails.
 
