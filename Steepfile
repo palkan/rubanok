@@ -12,8 +12,4 @@ target :lib do
   ignore "lib/rubanok/rails/*.rb"
   ignore "lib/rubanok/railtie.rb"
   ignore "lib/rubanok/rspec.rb"
-
-  # We use Set standard library; its signatures
-  # come with RBS, but we need to load them explicitly
-  library "set"
 end

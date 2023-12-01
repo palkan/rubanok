@@ -26,7 +26,7 @@ module Rubanok
             super(fields, activate_on: activate_on, activate_always: activate_always)
             @id = id
             @block = block
-            @values = Hash[fields.take(values.size).zip(values)].freeze
+            @values = fields.take(values.size).zip(values).to_h.freeze
             @fields = (fields - @values.keys).freeze
           end
 
@@ -34,7 +34,7 @@ module Rubanok
             values.all? { |key, matcher| params.key?(key) && (matcher == params[key]) }
           end
 
-          alias to_method_name id
+          alias_method :to_method_name, :id
         end
 
         attr_reader :clauses
@@ -73,7 +73,7 @@ module Rubanok
           rule.instance_eval(&block)
 
           define_method(rule.to_method_name) do |params = {}|
-            params ||= {} if params.nil?
+            params ||= {}
 
             clause = rule.matching_clause(params)
 
@@ -90,10 +90,6 @@ module Rubanok
 
           add_rule rule
         end
-      end
-
-      def self.included(base)
-        base.extend ClassMethods
       end
 
       def default_match_handler(rule, params, fail_when_no_matches)

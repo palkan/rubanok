@@ -11,9 +11,15 @@ module Rubanok
     def add_rule: (Rule rule) -> void
   end
 
+  interface _Processor
+    def raw: () -> input
+  end
+
   class Processor
+    include DSL::Matching
     extend DSL::Matching::ClassMethods
 
+    include DSL::Mapping
     extend DSL::Mapping::ClassMethods
 
     extend _RulesAdding

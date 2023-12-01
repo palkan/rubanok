@@ -29,7 +29,9 @@ module Rubanok
   #
   # You can access the input data via `raw` method.
   class Processor
+    extend DSL::Matching::ClassMethods
     include DSL::Matching
+    extend DSL::Mapping::ClassMethods
     include DSL::Mapping
 
     UNDEFINED = Object.new
@@ -106,8 +108,8 @@ module Rubanok
 
     attr_accessor :input, :prepared
 
-    alias raw input
-    alias prepared? prepared
+    alias_method :raw, :input
+    alias_method :prepared?, :prepared
 
     def apply_rule!(rule, params)
       method_name, data = rule.to_method_name, rule.project(params)

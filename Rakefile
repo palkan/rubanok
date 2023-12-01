@@ -18,16 +18,35 @@ rescue LoadError
 end
 
 task :steep do
+  # Steep doesn't provide Rake integration yet,
+  # but can do that ourselves
   require "steep"
   require "steep/cli"
 
-  Steep::CLI.new(argv: ["check"], stdout: $stdout, stderr: $stderr, stdin: $stdin).run
+  Steep::CLI.new(argv: ["check", "--severity-level=error"], stdout: $stdout, stderr: $stderr, stdin: $stdin).run.tap do |exit_code|
+    exit(exit_code) unless exit_code.zero?
+  end
 end
 
 namespace :steep do
   task :stats do
-    exec %q(bundle exec steep stats --log-level=fatal | awk -F',' '{ printf "%-28s %-9s %-12s %-14s %-10s\n", $2, $3, $4, $5, $7 }')
+    exec "bundle exec steep stats --log-level=fatal --format=table"
   end
 end
 
-task default: %w[steep rubocop rubocop:md spec]
+namespace :spec do
+  desc "Run RSpec with RBS runtime tester enabled"
+  task :rbs do
+    rspec_args = ARGV.join.split("--", 2).then { (_1.size == 2) ? _1.last : nil }
+    sh <<~COMMAND
+      RACK_ENV=test \
+      RBS_TEST_LOGLEVEL=error \
+      RBS_TEST_TARGET="Rubanok::*" \
+      RUBYOPT="-rrbs/test/setup" \
+      bundle exec rspec \
+      #{rspec_args}
+    COMMAND
+  end
+end
+
+task default: %w[steep rubocop rubocop:md spec spec:rbs]

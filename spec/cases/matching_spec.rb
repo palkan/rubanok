@@ -141,7 +141,7 @@ describe "Plane.match" do
         end
       end
 
-      let(:params) { Hash[status: "unknown"] }
+      let(:params) { {status: "unknown"} }
 
       around do |ex|
         was_value = Rubanok.fail_when_no_matches
@@ -192,7 +192,7 @@ describe "Plane.match" do
             raw.sort do |a, b|
               next 0 if a[:status] == b[:status]
 
-              a[:status].nil? || a[:status] == "active" ? -1 : 1
+              (a[:status].nil? || a[:status] == "active") ? -1 : 1
             end
           end
 
@@ -202,22 +202,22 @@ describe "Plane.match" do
               next -1 if a[:status].nil?
               next 1 if b[:status].nil?
 
-              a[:status] == "past" ? -1 : 1
+              (a[:status] == "past") ? -1 : 1
             end
           end
 
           having "name" do |sort: "asc"|
-            sign = sort == "asc" ? 1 : -1
+            sign = (sort == "asc") ? 1 : -1
 
             raw.sort do |a, b|
-              a[:name] == "Dexter" ? -1 : sign * (a[:name] <=> b[:name])
+              (a[:name] == "Dexter") ? -1 : sign * (a[:name] <=> b[:name])
             end
           end
 
           default do |sort_by:, sort: "asc"|
             next [] unless valid_sort_field?(sort_by)
 
-            sign = sort == "asc" ? 1 : -1
+            sign = (sort == "asc") ? 1 : -1
 
             sort_by = sort_by.to_sym
 

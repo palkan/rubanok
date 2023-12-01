@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-require_relative "./dummy/config/environment"
+require_relative "dummy/config/environment"
 require "rspec/rails"
 
 ActiveSupport.on_load(:action_controller) do

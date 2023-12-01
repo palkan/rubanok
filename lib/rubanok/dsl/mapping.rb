@@ -40,10 +40,6 @@ module Rubanok
           add_rule rule
         end
       end
-
-      def self.included(base)
-        base.extend ClassMethods
-      end
     end
   end
 end

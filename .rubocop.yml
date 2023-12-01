@@ -1,8 +1,21 @@
+inherit_mode:
+  merge:
+    - Exclude
+
 require:
-  - standard/cop/semantic_blocks
+  - standard
+  - standard-custom
+  - standard-performance
+  - rubocop-performance
 
 inherit_gem:
   standard: config/base.yml
+  standard-performance: config/base.yml
+  standard-custom: config/base.yml
+
+inherit_from:
+  - .rubocop/rspec.yml
+  - .rubocop/strict.yml
 
 AllCops:
   Exclude:
@@ -14,17 +27,9 @@ AllCops:
     - 'lib/.rbnext/**/*'
     - 'lib/generators/**/templates/*.rb'
     - '.github/**/*'
+  NewCops: disable
+  SuggestExtensions: false
   DisplayCopNames: true
-  TargetRubyVersion: 2.5
-
-Standard/SemanticBlocks:
-  Enabled: false
 
 Style/FrozenStringLiteralComment:
   Enabled: true
-
-Style/TrailingCommaInArrayLiteral:
-  EnforcedStyleForMultiline: no_comma
-
-Style/TrailingCommaInHashLiteral:
-  EnforcedStyleForMultiline: no_comma

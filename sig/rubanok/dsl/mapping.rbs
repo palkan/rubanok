@@ -1,6 +1,6 @@
 module Rubanok
   module DSL
-    module Mapping : Processor
+    module Mapping : _Processor
       class Rule < Rubanok::Rule
         METHOD_PREFIX: String
 
@@ -11,8 +11,6 @@ module Rubanok
       module ClassMethods : Module, _RulesAdding
         def map: (*field fields, ?activate_on: (field | Array[field]), ?activate_always: bool, ?ignore_empty_values: bool, ?filter_with: Symbol) { () -> input } -> void
       end
-
-      def self.included: (singleton(Processor) base) -> void
     end
   end
 end

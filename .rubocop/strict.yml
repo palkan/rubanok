@@ -1,0 +1,4 @@
+Lint/Debugger: # don't leave binding.pry
+  Enabled: true
+  Exclude: []
+

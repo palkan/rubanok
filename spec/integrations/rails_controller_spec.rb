@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "./controller_helper"
+require_relative "controller_helper"
 
 class RejectPlane < Rubanok::Plane
   map :type do |type:|
@@ -15,10 +15,10 @@ class PostsPlane < Rubanok::Plane
 
   match :sort_by, :sort, activate_on: :sort_by do
     having "type" do |sort: "asc"|
-      coef = sort == "asc" ? 1 : -1
+      coef = (sort == "asc") ? 1 : -1
       raw.sort do |a, b|
         next 0 if a[:type] == b[:type]
-        coef * (a[:type] == "sports" ? -1 : 1)
+        coef * ((a[:type] == "sports") ? -1 : 1)
       end
     end
   end

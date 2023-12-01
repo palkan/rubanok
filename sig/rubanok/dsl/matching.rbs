@@ -3,7 +3,7 @@ module Rubanok
   end
 
   module DSL
-    module Matching : Processor
+    module Matching : _Processor
       class Rule < Rubanok::Rule
         METHOD_PREFIX: String
         @method_name: String
@@ -32,13 +32,12 @@ module Rubanok
         def build_method_name: () -> String
       end
 
-      module ClassMethods : Module, _RulesAdding, Matching
-        def match: (*field fields, ?activate_on: field | Array[field], ?activate_always: bool, ?fail_when_no_matches: bool?) { (Rule) -> void } -> void
-      end
-
-      def self.included: (singleton(Processor) base) -> void
-
       def default_match_handler: (Rule rule, hash params, bool? fail_when_no_matches) -> void
+
+      module ClassMethods : Module, _RulesAdding
+        def match: (*field fields, ?activate_on: field | Array[field], ?activate_always: bool, ?fail_when_no_matches: bool?) { (Rule) -> void } -> void
+        def define_method: (String | Symbol) ?{ () [self: Rubanok::Processor] -> void } -> Symbol
+      end
     end
   end
 end

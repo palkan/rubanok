@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = "Parameters-based transformation DSL"
   spec.homepage = "https://github.com/palkan/rubanok"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 2.5.0"
+  spec.required_ruby_version = ">= 2.7.0"
 
   spec.files = Dir.glob("lib/**/*") + %w[README.md LICENSE.txt CHANGELOG.md] +
     Dir.glob("sig/**/*")
@@ -27,8 +27,8 @@ Gem::Specification.new do |spec|
 
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "actionpack", ">= 5.2"
-  spec.add_development_dependency "actionview", ">= 5.2"
+  spec.add_development_dependency "actionpack", ">= 6.0"
+  spec.add_development_dependency "actionview", ">= 6.0"
   spec.add_development_dependency "bundler", ">= 1.16"
   spec.add_development_dependency "rake", ">= 13.0"
   spec.add_development_dependency "rspec", ">= 3.0"
