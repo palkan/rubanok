@@ -10,6 +10,16 @@ processor = Class.new(Rubanok::Processor) do
     raw
   end
 
+  process :filter do
+    map :status do |status:|
+      raw
+    end
+
+    map :name do |name:|
+      raw
+    end
+  end
+
   match :sort_by, :sort, activate_on: :sort_by do
     having "status", "asc" do
       raw

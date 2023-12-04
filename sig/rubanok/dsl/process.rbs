@@ -1,0 +1,23 @@
+module Rubanok
+  module DSL
+    module Process : _Processor
+      class Rule < Rubanok::Rule
+        METHOD_PREFIX: String
+
+        attr_reader field: field
+        attr_reader processor: singleton(Processor)
+
+        %a{rbs:test:skip} def define_processor: (singleton(Processor)) { () -> void } -> void
+        def process: (input, params | nil) -> input
+
+        private
+        def build_method_name: () -> String
+      end
+
+      module ClassMethods : Module, _RulesAdding
+        %a{rbs:test:skip} def process: (field, superclass: singleton(Processor), ?activate_on: (field | Array[field]), ?activate_always: bool, ?ignore_empty_values: bool, ?filter_with: Symbol) { () -> input } -> void
+        def define_method: (String | Symbol) ?{ () [self: Rubanok::Processor] -> void } -> Symbol
+      end
+    end
+  end
+end

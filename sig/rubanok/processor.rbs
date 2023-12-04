@@ -22,6 +22,9 @@ module Rubanok
     include DSL::Mapping
     extend DSL::Mapping::ClassMethods
 
+    include DSL::Process
+    extend DSL::Process::ClassMethods
+
     extend _RulesAdding
 
     UNDEFINED: Object

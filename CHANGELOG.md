@@ -2,6 +2,8 @@
 
 ## master
 
+- Add nested processors support. ([@palkan][])
+
 ## 0.4.0 (2021-03-05)
 
 - Ruby 3.0 compatibility. ([@palkan][])

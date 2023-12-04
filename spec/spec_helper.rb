@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 begin
-  require "pry-byebug"
+  require "debug"
 rescue LoadError
 end
 

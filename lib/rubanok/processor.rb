@@ -6,6 +6,7 @@ require "rubanok/rule"
 
 require "rubanok/dsl/mapping"
 require "rubanok/dsl/matching"
+require "rubanok/dsl/process"
 
 module Rubanok
   # Base class for processors (_planes_)
@@ -33,6 +34,8 @@ module Rubanok
     include DSL::Matching
     extend DSL::Mapping::ClassMethods
     include DSL::Mapping
+    extend DSL::Process::ClassMethods
+    include DSL::Process
 
     UNDEFINED = Object.new
 

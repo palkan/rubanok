@@ -155,6 +155,28 @@ If in example above you will call `CourseSessionsProcessor.call(CourseSession, f
 
 **NOTE:** Rubanok only matches exact values; more complex matching could be added in the future.
 
+### Nested processors
+
+You can use the `.process` method to define sub-processors (or nested processors). It's useful when you use nested params, for example:
+
+```ruby
+class CourseSessionsProcessor < Rubanok::Processor
+  process :filter do
+    match :status do
+      having "draft" do
+        raw.where(draft: true)
+      end
+
+      having "deleted" do
+        raw.where.not(deleted_at: nil)
+      end
+    end
+
+    # You can also use .map or even .process here
+  end
+end
+```
+
 ### Default transformation
 
 Sometimes it's useful to perform some transformations before **any** rule is activated.
