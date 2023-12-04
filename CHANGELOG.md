@@ -2,6 +2,8 @@
 
 ## master
 
+## 0.5.0 (2023-12-04)
+
 - Add nested processors support. ([@palkan][])
 
 ## 0.4.0 (2021-03-05)
