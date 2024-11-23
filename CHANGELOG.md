@@ -2,6 +2,8 @@
 
 ## master
 
+- Fix errors caused by `rake steep` and `rake spec` commands related to deprecated methods and argument issues. ([@mizoR][])
+
 ## 0.5.0 (2023-12-04)
 
 - Add nested processors support. ([@palkan][])
