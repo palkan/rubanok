@@ -123,7 +123,7 @@ module Rubanok
         if data.empty?
           send(method_name)
         else
-          send(method_name, **data)
+          send(method_name, **data.transform_keys(&:to_sym))
         end
     end
 
