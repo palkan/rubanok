@@ -1,0 +1,6 @@
+source "https://rubygems.org"
+
+gem "actionpack", "~> 8.0"
+gem "actionview", "~> 8.0"
+
+gemspec path: ".."
