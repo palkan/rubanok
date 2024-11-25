@@ -2,6 +2,8 @@
 
 ## master
 
+## 0.5.1 (2024-11-24)
+
 - Fix errors caused by `rake steep` and `rake spec` commands related to deprecated methods and argument issues. ([@mizoR][])
 
 ## 0.5.0 (2023-12-04)
