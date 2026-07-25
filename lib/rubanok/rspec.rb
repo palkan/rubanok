@@ -44,11 +44,11 @@ module Rubanok
     end
 
     def failure_message
-      "expected to use #{processor.name}#{data_class ? " for #{data_class.name}" : ""}, but didn't"
+      "expected to use #{processor.name}#{" for #{data_class.name}" if data_class}, but didn't"
     end
 
     def failure_message_when_negated
-      "expected not to use #{processor.name}#{data_class ? " for #{data_class.name} " : ""}, but have used"
+      "expected not to use #{processor.name}#{" for #{data_class.name} " if data_class}, but have used"
     end
 
     private
