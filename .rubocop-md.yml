@@ -1,4 +1,8 @@
 inherit_from: ".rubocop.yml"
 
-require:
+plugins:
   - rubocop-md
+
+AllCops:
+  Include:
+    - '**/*.md'
